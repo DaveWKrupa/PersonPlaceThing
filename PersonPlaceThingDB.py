@@ -2,22 +2,27 @@ import uuid
 import psycopg2
 from ManagedConnection import ManagedConnection
 from RecordID import RecordID
-from CustomExceptions import InvalidTableNameError, DatabaseSQLError
-from CustomExceptions import ExceptionString, InvalidParametersError
-from Constants import TABLE_NAME_ERROR, NO_PARAMETERS_UPDATE_ERROR, NO_PARAMETERS_INSERT_ERROR
+from CustomExceptions import InvalidTableNameError, \
+    DatabaseSQLError, \
+    ExceptionString, InvalidParametersError
+from Constants import DatabaseResult, TABLE_NAME_ERROR, \
+    NO_PARAMETERS_UPDATE_ERROR, RECORD_SAVED, \
+    NO_PARAMETERS_INSERT_ERROR, ERROR_SAVING_RECORD, RECORD_DELETED
 
 
 class PersonPlaceThingDB:
 
     @staticmethod
-    def save(table_name, record_id, data):
+    def save(table_name, record_id, last_updated, data):
         if record_id != uuid.UUID(int=0):
-            return PersonPlaceThingDB.update(table_name, record_id, data)
+            return PersonPlaceThingDB.update(table_name,
+                                             record_id, last_updated, data)
         else:
             return PersonPlaceThingDB.create(table_name, data)
 
     @staticmethod
     def create(table_name, data):
+
         if PersonPlaceThingDB.__is_table_name_valid(table_name):
 
             sql = PersonPlaceThingDB.__get_insert_statement(
@@ -29,49 +34,62 @@ class PersonPlaceThingDB:
                 PersonPlaceThingDB.__get_param_values_for_save(
                     new_id, data)
 
-            PersonPlaceThingDB.__execute_sql_statement(sql, parameter_values)
-
-            return new_id
+            return PersonPlaceThingDB.__execute_sql_statement(table_name,
+                                                              sql, new_id,
+                                                              parameter_values)
         else:
             raise InvalidTableNameError(TABLE_NAME_ERROR, table_name)
 
     @staticmethod
     def read(table_name, data, record_id=None):
-        sql = PersonPlaceThingDB.__get_select_statement(table_name, data, record_id)
-        if len(data) > 0:
+        sql = PersonPlaceThingDB.__get_select_statement(table_name,
+                                                        data, record_id)
+        if record_id or len(data) > 0:
             parameter_values = \
                 PersonPlaceThingDB.__get_param_values_for_read(
                     data, record_id)
         else:
             parameter_values = None
 
-        return PersonPlaceThingDB.__get_records(table_name, sql, parameter_values, record_id)
+        return PersonPlaceThingDB.__get_records(table_name, sql,
+                                                parameter_values, record_id)
 
     @staticmethod
     def read_where_like(table_name, data):
-        sql = PersonPlaceThingDB.__get_select_where_like_statement(table_name, data)
+        sql = PersonPlaceThingDB.__get_select_where_like_statement(table_name,
+                                                                   data)
         if len(data) > 0:
             parameter_values = \
                 PersonPlaceThingDB.__get_param_values_for_read_where_like(data)
         else:
             parameter_values = None
 
-        return PersonPlaceThingDB.__get_records(table_name, sql, parameter_values)
+        return PersonPlaceThingDB.__get_records(table_name, sql,
+                                                parameter_values)
 
     @staticmethod
-    def update(table_name, record_id, data):
+    def read_with_tags(table_name, tags):
+        if not tags or not isinstance(tags, list):
+            return None
+        lower_case_tags = map(lambda x: x.lower(), tags)
+        sql = PersonPlaceThingDB.__get_select_with_tags_statement(
+            table_name, list(lower_case_tags))
+        return PersonPlaceThingDB.__get_records(table_name, sql, tuple(tags))
+
+    @staticmethod
+    def update(table_name, record_id, last_updated, data):
         if PersonPlaceThingDB.__is_table_name_valid(table_name):
 
             sql = PersonPlaceThingDB.__get_update_statement(
-                table_name, data)
+                table_name, last_updated, data)
 
             parameter_values = \
                 PersonPlaceThingDB.__get_param_values_for_save(
                     record_id, data, False)
 
-            PersonPlaceThingDB.__execute_sql_statement(sql, parameter_values)
-
-            return record_id
+            return PersonPlaceThingDB.__execute_sql_statement(table_name,
+                                                              sql, record_id,
+                                                              parameter_values)
 
         else:
             raise InvalidTableNameError(TABLE_NAME_ERROR, table_name)
@@ -83,8 +101,9 @@ class PersonPlaceThingDB:
             sql = f"DELETE FROM {table_name} WHERE id = %s;"
             # RecordID class validates for uuid, then convert to string
             record_id = str(RecordID(record_id).record_id)
-            PersonPlaceThingDB.__execute_sql_statement(
-                sql, (record_id,))
+            return PersonPlaceThingDB.__execute_sql_statement(table_name,
+                                                              sql, record_id,
+                                                              (record_id,))
 
         else:
             raise InvalidTableNameError(TABLE_NAME_ERROR, table_name)
@@ -113,7 +132,32 @@ class PersonPlaceThingDB:
             raise InvalidTableNameError(TABLE_NAME_ERROR, table_name)
 
     @staticmethod
-    def __execute_sql_statement(sql, parameter_values):
+    def get_distinct_tags_list():
+        sql = "SELECT tags FROM tags_view"
+
+        with ManagedConnection.get_managed_cursor() as cur:
+            try:
+
+                cur.execute(sql)
+
+                result_set = set()
+                # each row will be a tuple with one item
+                # each item being a list of one or more tags
+                # add the lists to the result_set
+                # which will eliminate dupes
+                for row in cur.fetchall():
+                    result_set = result_set.union(set(row[0]))
+
+                # convert result_set to a list so it can be sorted
+                result_list = list(result_set)
+                result_list.sort()
+                return result_list
+            except psycopg2.Error as de:
+                raise DatabaseSQLError(
+                    ExceptionString.get_exception_string(de))
+
+    @staticmethod
+    def __execute_sql_statement(table_name, sql, record_id, parameter_values):
         with ManagedConnection.get_managed_connection() as conn:
             try:
 
@@ -121,9 +165,18 @@ class PersonPlaceThingDB:
                 cur.execute(sql, parameter_values)
                 conn.commit()
                 cur.close()
+                if sql[:6] == "DELETE":
+                    result = DatabaseResult(True, record_id, table_name
+                                            + ": " + RECORD_DELETED, "")
+                else:
+                    result = DatabaseResult(True, record_id, table_name
+                                            + ": " + RECORD_SAVED, "")
+                return result
 
             except psycopg2.Error as de:
-                raise DatabaseSQLError(ExceptionString.get_exception_string(de))
+                result = DatabaseResult(False, record_id, ERROR_SAVING_RECORD,
+                                        ExceptionString.get_exception_string(de))
+                return result
 
     @staticmethod
     def __is_table_name_valid(table_name):
@@ -176,16 +229,36 @@ class PersonPlaceThingDB:
 
             for k, v in data.items():
                 if not add_an_and:
-                    select_statement += k + " LIKE %s"
+                    select_statement += f"LOWER({k}) LIKE %s"
                     add_an_and = True
                 else:
-                    select_statement += " AND " + k + " LIKE %s"
+                    select_statement += f" AND LOWER({k} LIKE %s"
 
             select_statement += ";"
         return select_statement
 
     @staticmethod
-    def __get_update_statement(table_name, data):
+    def __get_select_with_tags_statement(table_name, tags):
+        select_statement = f"SELECT * FROM {table_name}"
+
+        if len(tags) == 0:
+            return select_statement
+        else:
+            select_statement += " WHERE "
+            add_an_or = False
+
+            for _ in tags:
+                if not add_an_or:
+                    select_statement += "%s = ANY(tags)"
+                    add_an_or = True
+                else:
+                    select_statement += " OR %s = ANY(tags)"
+
+            select_statement += ";"
+        return select_statement
+
+    @staticmethod
+    def __get_update_statement(table_name, last_updated, data):
         if len(data) == 0:
             raise InvalidParametersError(NO_PARAMETERS_UPDATE_ERROR)
         else:
@@ -200,13 +273,13 @@ class PersonPlaceThingDB:
                 else:
                     update_statement += ", " + k + " = %s"
 
-        update_statement += "WHERE id = %s;"
+        update_statement += f" WHERE id = %s and last_updated = '{last_updated}';"
         return update_statement
 
     @staticmethod
     def __get_insert_statement(table_name, data):
         if len(data) == 0:
-            raise InvalidParametersError(NO_PARAMETERS_INSERT_ERROR )
+            raise InvalidParametersError(NO_PARAMETERS_INSERT_ERROR)
         else:
             insert_statement = f"INSERT INTO {table_name} (id"
             place_holders = ""
@@ -237,7 +310,7 @@ class PersonPlaceThingDB:
         param_vals = list()
 
         for k, v in data.items():
-            param_vals.append('%' + str(v) + '%')
+            param_vals.append('%' + str(v).lower() + '%')
 
         return tuple(param_vals)
 

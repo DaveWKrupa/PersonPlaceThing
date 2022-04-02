@@ -1,10 +1,12 @@
-from CustomExceptions import InvalidZipCodeError
+
 from Constants import ZIP_CODE_FORMAT_ERROR
 
 
 class Address:
-    def __init__(self, street=None, street2=None,
+    def __init__(self, invalid_data_callback_func=None,
+                 street=None, street2=None,
                  city=None, state=None, zip_code=None):
+        self.__invalid_data_callback_func = invalid_data_callback_func
         self.street = street
         self.street2 = street2
         self.city = city
@@ -22,7 +24,7 @@ class Address:
             for character in value:
                 if not character.isnumeric() \
                         and character != "-":
-                    raise InvalidZipCodeError(ZIP_CODE_FORMAT_ERROR)
+                    self.__fire_invalid_data_callback_func(ZIP_CODE_FORMAT_ERROR)
                 else:
                     self.__zip_code = value
 
@@ -46,3 +48,7 @@ class Address:
             return '\n'.join(lines)
         else:
             return ''
+
+    def __fire_invalid_data_callback_func(self, message):
+        if self.__invalid_data_callback_func:
+            self.__invalid_data_callback_func(message=message)

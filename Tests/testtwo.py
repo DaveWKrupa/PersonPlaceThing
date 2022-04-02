@@ -1,16 +1,84 @@
-from PersonPlaceThingDB import PersonPlaceThingDB
 
-ppt = PersonPlaceThingDB()
-records = ppt.read("person", {})
-print(records)
-
+# from DataFactory import TagsList
 #
+# data = TagsList().get_tags_list()
+# print(data)
+# lower_case_tags = map(lambda x: x.upper(), data)
+# print(list(lower_case_tags))
+
+
+# class FirstClass:
+#     def __init__(self):
+#         refresh_callback = self.get_refresh_callback_function()
+#         self.second_class = SecondClass(refresh_callback)
+#
+#     def save(self):
+#         self.second_class.save()
+#
+#     def get_refresh_callback_function(self):
+#         def refresh_data_callback_function():
+#             self.refresh_data()
+#
+#         return refresh_data_callback_function
+#
+#     def refresh_data(self):
+#         print("refreshing data")
+#
+#
+# class SecondClass:
+#     def __init__(self, refresh_callback):
+#         self.refresh_callback = refresh_callback
+#
+#     def save(self):
+#         self.refresh_the_data()
+#
+#     def refresh_the_data(self):
+#         self.refresh_callback()
+#
+#
+# fc = FirstClass()
+# fc.save()
+
+
+
+
+
+
+
+
+
+# my_list = ["one", "two", "three", "four", "four"]
+# print(my_list.count("four"))
+# print(my_list)
+# my_list = list(filter(lambda val: val != "four", my_list))
+# print(my_list)
+#
+# my_set = set(my_list)
+# print(my_set)
+
+
+# from PersonPlaceThingDB import PersonPlaceThingDB
+#
+# ppt = PersonPlaceThingDB()
+# records = ppt.read("person", {})
+# print(records)
+
+# #
 # class MyParentClass:
 #     def __init__(self):
 #         self._myparentclassattribute = "My parent class attribute"
 #
 #     def myfunc(self, first_arg):
-#         print(first_arg)
+#         print("myfunc " + first_arg)
+#
+# class MySecondParentClass:
+#     def __init__(self):
+#         self._myparentclassattribute = "My parent class attribute"
+#
+#     def myfunctwo(self, first_arg):
+#         print("myfunctwo " + first_arg)
+# #
+# #
 #
 #
 # class MyChildClass(MyParentClass):
@@ -26,7 +94,7 @@ print(records)
 #     def __init__(self):
 #         super().__init__()
 #         self.mychildclassattribute = "My child class2  attribute"
-
+#
 
 
 

@@ -1,20 +1,17 @@
-from datetime import timedelta, datetime
+from datetime import datetime
 from Constants import YYYY_MM_DD, YYYY_MM_DD_FORMAT
 from Constants import HH_MM_SS, HH_MM_SS_FORMAT
 from Constants import YYYY_MM_DD_HH_MM_SS_FORMAT, YYYY_MM_DD_HH_MM_SS
-from CustomExceptions import InvalidDateTimeError
 
 
 class DateTimeManager:
-    def __init__(self, start_date=None, start_time=None,
-                 end_date=None, end_time=None,
+    def __init__(self, invalid_data_callback_func=None,
                  start_date_time=None, end_date_time=None):
-        self.__start_date = start_date \
-            if self.validate_date(start_date) else ''
-        self.__start_time = start_time \
-            if self.validate_time(start_time) else ''
-        self.__end_date = end_date if self.validate_date(end_date) else ''
-        self.__end_time = end_time if self.validate_time(end_time) else ''
+        self.__invalid_data_callback_func = invalid_data_callback_func
+        self.__start_date = None
+        self.__start_time = None
+        self.__end_date = None
+        self.__end_time = None
         self.__start_date_time = start_date_time \
             if self.validate_date_time(start_date_time) else ''
         self.__end_date_time = end_date_time \
@@ -93,7 +90,7 @@ class DateTimeManager:
         if not date_text:
             return True  # a value of None is valid
         if not self.__validate_input(date_text, YYYY_MM_DD_FORMAT):
-            raise InvalidDateTimeError(
+            self.__fire_invalid_data_callback_func(
                 f"Date format should take the form {YYYY_MM_DD}")
         return True
 
@@ -101,7 +98,7 @@ class DateTimeManager:
         if not time_text:
             return True  # a value of None is valid
         if not self.__validate_input(time_text, HH_MM_SS_FORMAT):
-            raise InvalidDateTimeError(
+            self.__fire_invalid_data_callback_func(
                 "Time format should take the 24 hour form "
                 f"with time zone {HH_MM_SS}")
         return True
@@ -110,14 +107,14 @@ class DateTimeManager:
         if not time_text:
             return True  # a value of None is valid
         if not self.__validate_input(time_text, YYYY_MM_DD_HH_MM_SS_FORMAT):
-            raise InvalidDateTimeError(
+            self.__fire_invalid_data_callback_func(
                 "Date-Time format should take the 24 hour form "
                 f"with time zone {YYYY_MM_DD_HH_MM_SS}")
         return True
 
     def __validate_input(self, date_text, format_string):
         try:
-            datetime.strptime(date_text, format_string)
+            datetime.strptime(str(date_text), format_string)
             return True
         except ValueError:
             return False
@@ -291,3 +288,6 @@ class DateTimeManager:
         else:
             return ''
 
+    def __fire_invalid_data_callback_func(self, message):
+        if self.__invalid_data_callback_func:
+            self.__invalid_data_callback_func(message=message)

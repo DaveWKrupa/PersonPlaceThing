@@ -9,7 +9,7 @@ class ExceptionString:
 
         # get the line number when exception occurred
         line_num = traceback.tb_lineno
-        return f"Database ERROR: {err}, on line number:  {line_num}"
+        return f"ERROR: {err}"
 
 
 class InvalidTableNameError(Exception):
@@ -33,24 +33,10 @@ class DatabaseSQLError(Exception):
         self.message = message
 
 
-class InvalidZipCodeError(Exception):
-    def __init__(self, message):
-        self.message = message
-
-
-class InvalidPhoneNumberError(Exception):
-    def __init__(self, message):
-        self.message = message
-
-
 class InvalidRecordIDError(Exception):
     def __init__(self, message):
         self.message = message
 
-
-class InvalidDateTimeError(Exception):
-    def __init__(self, message):
-        self.message = message
 
 
 

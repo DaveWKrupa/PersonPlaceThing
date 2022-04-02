@@ -1,5 +1,4 @@
 from Person import Person
-from CustomExceptions import InvalidZipCodeError, InvalidPhoneNumberError
 from CustomExceptions import InvalidRecordIDError, InvalidTableNameError
 from CustomExceptions import DatabaseSQLError, InvalidParametersError
 
@@ -20,16 +19,9 @@ person.street = "385 Unknown Blvd."
 person.street2 = "Apt. 49"
 person.city = "Brighton"
 person.state = "Colorado"
-try:
-    person.phone_number = "123.456-7890"
-except InvalidPhoneNumberError as e:
-    assert False, e.message
+person.phone_number = "123.456-7890"
+person.zip_code = "12345-6789"
 
-
-try:
-    person.zip_code = "12345-6789"
-except InvalidZipCodeError as e:
-    assert False, e.message
 
 print("Person 1")
 print("Before Save")

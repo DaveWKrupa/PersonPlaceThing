@@ -1,7 +1,3 @@
-#from TableConnector import TableConnector
+from PersonEventConnector import PersonEventConnector
 
-from ConnectorClasses import ActionEventConnector
 
-aec = ActionEventConnector()
-
-aec.save

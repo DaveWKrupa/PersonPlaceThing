@@ -34,10 +34,10 @@ from datetime import datetime, timedelta
 # date_time1_string = '17:00:00-07:00'
 # date_time2_string = '16:00:00-09:00'
 
-date_string1 = "2022-01-23"
-date_string2 = "2022-01-23"
-date_time1_string = '17:00:00-07:00'
-date_time2_string = '17:00:01-07:00'
+# date_string1 = "2022-01-23"
+# date_string2 = "2022-01-23"
+# date_time1_string = '17:00:00-07:00'
+# date_time2_string = '17:00:01-07:00'
 
 # date_time1 = datetime.strptime(str(date_time1_string), '%H:%M:%S%z')
 # date_time2 = datetime.strptime(str(date_time2_string), '%H:%M:%S%z')
@@ -46,21 +46,21 @@ date_time2_string = '17:00:01-07:00'
 # print(date_time1 == date_time2)
 #
 # print((date_time2 - date_time1).total_seconds())
-
-n1 = date_string1 + " " + date_time1_string
-n2 = date_string2 + " " + date_time2_string
-datetime_object1 = datetime.strptime(n1, '%Y-%m-%d %H:%M:%S%z')
-datetime_object2 = datetime.strptime(n2, '%Y-%m-%d %H:%M:%S%z')
-print(datetime_object1)
-print(type(datetime_object1))
-print(datetime_object2)
-print(type(datetime_object2))
-print(datetime_object2 > datetime_object1)
-
-try:
-    print(datetime.strptime(str(n1), '%Y-%m-%d %H:%M:%S%z'))
-except ValueError:
-    print("error")
+#
+# n1 = date_string1 + " " + date_time1_string
+# n2 = date_string2 + " " + date_time2_string
+# datetime_object1 = datetime.strptime(n1, '%Y-%m-%d %H:%M:%S%z')
+# datetime_object2 = datetime.strptime(n2, '%Y-%m-%d %H:%M:%S%z')
+# print(datetime_object1)
+# print(type(datetime_object1))
+# print(datetime_object2)
+# print(type(datetime_object2))
+# print(datetime_object2 > datetime_object1)
+#
+# try:
+#     print(datetime.strptime(str(n1), '%Y-%m-%d %H:%M:%S%z'))
+# except ValueError:
+#     print("error")
 
 # def __get_parameter_values_with_id_tuple(record_id=None, **kwargs):
 #     param_vals = list()
