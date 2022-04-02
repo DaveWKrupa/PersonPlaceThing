@@ -1,0 +1,34 @@
+-- View: public.person_person_view
+
+-- DROP VIEW public.person_person_view;
+
+CREATE OR REPLACE VIEW public.person_person_view
+ AS
+ SELECT person_a.first_name AS person_a_name,
+    relationship_type.short_description AS relationship_type_description,
+    person_b.first_name AS person_b_name,
+    person_person.description AS person_person_description,
+    person_a.street AS person_a_street,
+    person_a.street2 AS person_a_street2,
+    person_a.city AS person_a_city,
+    person_a.state AS person_a_state,
+    person_a.zip_code AS person_a_zip_code,
+    person_a.phone_number AS person_a_phone_number,
+    person_b.street AS person_b_street,
+    person_b.street2 AS person_b_street2,
+    person_b.city AS person_b_city,
+    person_b.state AS person_b_state,
+    person_b.zip_code AS person_b_zip_code,
+    person_b.phone_number AS person_b_phone_number,
+    person_person.person_id_a,
+    person_person.person_id_b,
+    person_person.relationship_type_id,
+    person_person.id AS person_person_id
+   FROM person person_a
+     JOIN person_person ON person_person.person_id_a = person_a.id
+     JOIN person person_b ON person_person.person_id_b = person_b.id
+     JOIN relationship_type ON person_person.relationship_type_id = relationship_type.id;
+
+ALTER TABLE public.person_person_view
+    OWNER TO postgres;
+

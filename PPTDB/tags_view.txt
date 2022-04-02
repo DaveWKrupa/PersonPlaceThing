@@ -1,0 +1,37 @@
+-- View: public.tags_view
+
+-- DROP VIEW public.tags_view;
+
+CREATE OR REPLACE VIEW public.tags_view
+ AS
+ SELECT DISTINCT role.tags
+   FROM role
+  WHERE role.tags IS NOT NULL
+UNION
+ SELECT DISTINCT thing.tags
+   FROM thing
+  WHERE thing.tags IS NOT NULL
+UNION
+ SELECT DISTINCT person.tags
+   FROM person
+  WHERE person.tags IS NOT NULL
+UNION
+ SELECT DISTINCT event.tags
+   FROM event
+  WHERE event.tags IS NOT NULL
+UNION
+ SELECT DISTINCT action.tags
+   FROM action
+  WHERE action.tags IS NOT NULL
+UNION
+ SELECT DISTINCT place.tags
+   FROM place
+  WHERE place.tags IS NOT NULL
+UNION
+ SELECT DISTINCT relationship_type.tags
+   FROM relationship_type
+  WHERE relationship_type.tags IS NOT NULL;
+
+ALTER TABLE public.tags_view
+    OWNER TO postgres;
+

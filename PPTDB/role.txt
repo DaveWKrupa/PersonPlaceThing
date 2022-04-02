@@ -1,0 +1,29 @@
+-- Table: public.role
+
+-- DROP TABLE IF EXISTS public.role;
+
+CREATE TABLE IF NOT EXISTS public.role
+(
+    id uuid NOT NULL,
+    short_description text COLLATE pg_catalog."default" NOT NULL,
+    tags text[] COLLATE pg_catalog."default",
+    long_description text COLLATE pg_catalog."default",
+    last_updated timestamp with time zone,
+    CONSTRAINT "Role_pkey" PRIMARY KEY (id),
+    CONSTRAINT short_desc_unique UNIQUE (short_description)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.role
+    OWNER to postgres;
+
+-- Trigger: role_trigger
+
+-- DROP TRIGGER IF EXISTS role_trigger ON public.role;
+
+CREATE TRIGGER role_trigger
+    BEFORE INSERT OR UPDATE 
+    ON public.role
+    FOR EACH ROW
+    EXECUTE FUNCTION public.record_data_changed();

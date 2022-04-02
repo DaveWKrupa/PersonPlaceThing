@@ -1,0 +1,40 @@
+-- Table: public.thing_place
+
+-- DROP TABLE IF EXISTS public.thing_place;
+
+CREATE TABLE IF NOT EXISTS public.thing_place
+(
+    id uuid NOT NULL,
+    thing_id uuid NOT NULL,
+    place_id uuid NOT NULL,
+    relationship_type_id uuid NOT NULL,
+    role_id uuid,
+    description text COLLATE pg_catalog."default",
+    last_updated timestamp with time zone,
+    CONSTRAINT "Thing_Place_pkey" PRIMARY KEY (id),
+    CONSTRAINT "PlaceID_PlaceTable" FOREIGN KEY (place_id)
+        REFERENCES public.place (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+        NOT VALID,
+    CONSTRAINT "ThingID_ThingTable" FOREIGN KEY (thing_id)
+        REFERENCES public.thing (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+        NOT VALID
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.thing_place
+    OWNER to postgres;
+
+-- Trigger: thing_place_trigger
+
+-- DROP TRIGGER IF EXISTS thing_place_trigger ON public.thing_place;
+
+CREATE TRIGGER thing_place_trigger
+    BEFORE INSERT OR UPDATE 
+    ON public.thing_place
+    FOR EACH ROW
+    EXECUTE FUNCTION public.record_data_changed();

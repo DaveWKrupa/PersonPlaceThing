@@ -1,0 +1,20 @@
+7f237cd3-37d4-4656-a144-57bfd556553e	Maid	{person,profession}	\N	2022-03-29 18:21:00-07
+57c41f3d-21da-4bb6-9931-8b96bcbb79e5	Police Chief	{person,profession}	\N	2022-03-29 18:21:00-07
+15c372be-7a44-464a-a8d7-a1c52e6b11c9	Psychiatrist	{person,profession}	\N	2022-03-29 18:21:00-07
+9b5fd509-4bef-4d12-ac62-5341aea3ed47	Entertainer	{person,profession}	\N	2022-03-29 18:21:00-07
+c650fe33-eb31-47b9-ab86-0f16e1f6e33b	Military Officer	{person,profession}	\N	2022-03-29 18:21:00-07
+34e22e87-f455-48a3-af74-38202acab6bf	Physician	{person,profession}	\N	2022-03-29 18:21:00-07
+e4b20569-7ae7-4483-9b46-159a811c0352	Plumber	{person,profession}	\N	2022-03-29 18:21:00-07
+4f172d80-3a78-4471-b6e0-60138e1f331e	Housekeeper/Nanny	{person,profession}	\N	2022-03-29 18:21:00-07
+85ab8c1e-5569-4066-bf9f-22e03e1bddd9	Mansion Owner	{person,property}	\N	2022-03-29 18:21:00-07
+1f119ca3-578f-47ea-8142-ae767e1c96d0	Widow	{person,family}	\N	2022-03-29 18:21:00-07
+1732d3d2-2f8a-40d0-89e1-f516d8295fb9	Guest	{person,social}	\N	2022-03-29 18:21:00-07
+81921e4a-dce4-446b-a9c1-8ae118bada79	Host	{person,social}	\N	2022-03-29 18:21:00-07
+a6ffd2f0-7aa0-411a-97a1-d6ba8eaf3a62	Victim of murder	{person,crime}	\N	2022-03-29 18:21:00-07
+e6b6578a-86d3-46a3-a9f1-164386fd1122	Suspect of crime	{person,crime}	\N	2022-03-29 18:21:00-07
+7b97e096-db5d-492b-8c14-e242be47a9e8	Murder weapon	{thing,crime}	\N	2022-03-29 18:21:00-07
+43908418-21c2-4922-91ba-540b438972de	Butler	{person,profession,golf}	\N	2022-03-29 18:21:00-07
+7aa02635-5e7f-4ea0-bef1-ee16d8bf152d	Singer	{music,social}	Long description of a singer	2022-03-29 18:21:00-07
+9112abe0-d3e9-435e-959b-60969318263e	Actor	{movies,social,acting,producing,directing,profession}	Long description of a actor	2022-03-29 18:21:00-07
+965015ed-bb45-4341-9cc0-1853046313a5	Writer	{movies,books,social,reading,producing,profession,writing}	Long description of a director	2022-03-29 18:21:00-07
+22d31bc5-f52e-407a-97e0-dfcad069e7d9	Director	{movies,social,acting,producing,directing,profession,writing}	hey there1	2022-03-30 18:19:08.837047-07

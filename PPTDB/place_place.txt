@@ -1,0 +1,58 @@
+-- Table: public.place_place
+
+-- DROP TABLE IF EXISTS public.place_place;
+
+CREATE TABLE IF NOT EXISTS public.place_place
+(
+    id uuid NOT NULL,
+    place_id_a uuid NOT NULL,
+    place_id_b uuid NOT NULL,
+    relationship_type_id uuid NOT NULL,
+    description text COLLATE pg_catalog."default",
+    role_id uuid,
+    last_updated timestamp with time zone,
+    CONSTRAINT "Place_Place_pkey" PRIMARY KEY (id),
+    CONSTRAINT "PlaceID_A_PlaceTable" FOREIGN KEY (place_id_a)
+        REFERENCES public.place (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE,
+    CONSTRAINT "PlaceID_B_PlaceTable" FOREIGN KEY (place_id_b)
+        REFERENCES public.place (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE,
+    CONSTRAINT "RoleID_RoleTable" FOREIGN KEY (role_id)
+        REFERENCES public.role (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.place_place
+    OWNER to postgres;
+-- Index: fki_PlaceID_A_PlaceTable
+
+-- DROP INDEX IF EXISTS public."fki_PlaceID_A_PlaceTable";
+
+CREATE INDEX IF NOT EXISTS "fki_PlaceID_A_PlaceTable"
+    ON public.place_place USING btree
+    (place_id_a ASC NULLS LAST)
+    TABLESPACE pg_default;
+-- Index: fki_PlaceID_B_PlaceTable
+
+-- DROP INDEX IF EXISTS public."fki_PlaceID_B_PlaceTable";
+
+CREATE INDEX IF NOT EXISTS "fki_PlaceID_B_PlaceTable"
+    ON public.place_place USING btree
+    (place_id_b ASC NULLS LAST)
+    TABLESPACE pg_default;
+
+-- Trigger: place_place_trigger
+
+-- DROP TRIGGER IF EXISTS place_place_trigger ON public.place_place;
+
+CREATE TRIGGER place_place_trigger
+    BEFORE INSERT OR UPDATE 
+    ON public.place_place
+    FOR EACH ROW
+    EXECUTE FUNCTION public.record_data_changed();

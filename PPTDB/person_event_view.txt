@@ -1,0 +1,44 @@
+-- View: public.person_event_view
+
+-- DROP VIEW public.person_event_view;
+
+CREATE OR REPLACE VIEW public.person_event_view
+ AS
+ SELECT person.first_name,
+    person.phone_number,
+    person.street,
+    person.street2,
+    person.city,
+    person.state,
+    person.zip_code,
+    person.middle_name,
+    person.last_name,
+    person.prefix_name,
+    person.suffix_name,
+    person.tags AS person_tags,
+    event.short_description AS event_short_description,
+    event.long_description AS event_long_description,
+    event.start_date_time AS event_start_date_time,
+    event.end_date_time AS event_end_date_time,
+    event.tags AS event_tags,
+    relationship_type.short_description AS relationship_type_short_description,
+    relationship_type.long_description AS relationship_type_long_description,
+    relationship_type.tags AS relationship_type_tags,
+    role.short_description AS role_short_description,
+    role.long_description AS role_long_description,
+    role.tags AS role_tags,
+    person_event.description AS person_event_description,
+    person_event.person_id,
+    person_event.event_id,
+    person_event.role_id,
+    person_event.relationship_type_id,
+    person_event.id AS person_event_id
+   FROM person
+     JOIN person_event ON person.id = person_event.person_id
+     JOIN event ON event.id = person_event.event_id
+     JOIN relationship_type ON relationship_type.id = person_event.relationship_type_id
+     JOIN role ON role.id = person_event.role_id;
+
+ALTER TABLE public.person_event_view
+    OWNER TO postgres;
+

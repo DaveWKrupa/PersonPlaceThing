@@ -1,0 +1,28 @@
+-- View: public.action_event_view
+
+-- DROP VIEW public.action_event_view;
+
+CREATE OR REPLACE VIEW public.action_event_view
+ AS
+ SELECT action.short_description AS action_short_description,
+    relationship_type.short_description AS relationship_type_short_description,
+    event.short_description AS event_short_description,
+    action.start_date_time AS action_start_date_time,
+    action.end_date_time AS action_end_date_time,
+    event.start_date_time AS event_start_date_time,
+    event.end_date_time AS event_end_date_time,
+    action.long_description AS action_long_description,
+    event.long_description AS event_long_description,
+    action_event.description AS action_event_description,
+    action_event.action_id,
+    action_event.event_id,
+    action_event.relationship_type_id,
+    action_event.id AS action_event_id
+   FROM action
+     JOIN action_event ON action.id = action_event.action_id
+     JOIN event ON event.id = action_event.event_id
+     JOIN relationship_type ON relationship_type.id = action_event.relationship_type_id;
+
+ALTER TABLE public.action_event_view
+    OWNER TO postgres;
+

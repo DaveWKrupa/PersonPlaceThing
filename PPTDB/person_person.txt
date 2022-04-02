@@ -1,0 +1,58 @@
+-- Table: public.person_person
+
+-- DROP TABLE IF EXISTS public.person_person;
+
+CREATE TABLE IF NOT EXISTS public.person_person
+(
+    id uuid NOT NULL,
+    person_id_a uuid NOT NULL,
+    person_id_b uuid NOT NULL,
+    relationship_type_id uuid NOT NULL,
+    description text COLLATE pg_catalog."default",
+    role_id uuid,
+    last_updated timestamp with time zone,
+    CONSTRAINT "Person_Person_pkey" PRIMARY KEY (id),
+    CONSTRAINT "PersonID_A_PersonTable" FOREIGN KEY (person_id_a)
+        REFERENCES public.person (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE,
+    CONSTRAINT "PersonID_B_PersonTable" FOREIGN KEY (person_id_b)
+        REFERENCES public.person (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE,
+    CONSTRAINT "RoleID_RoleTable" FOREIGN KEY (role_id)
+        REFERENCES public.role (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.person_person
+    OWNER to postgres;
+-- Index: fki_PersonID_A_PersonTable
+
+-- DROP INDEX IF EXISTS public."fki_PersonID_A_PersonTable";
+
+CREATE INDEX IF NOT EXISTS "fki_PersonID_A_PersonTable"
+    ON public.person_person USING btree
+    (person_id_a ASC NULLS LAST)
+    TABLESPACE pg_default;
+-- Index: fki_PersonID_B_PersonTable
+
+-- DROP INDEX IF EXISTS public."fki_PersonID_B_PersonTable";
+
+CREATE INDEX IF NOT EXISTS "fki_PersonID_B_PersonTable"
+    ON public.person_person USING btree
+    (person_id_b ASC NULLS LAST)
+    TABLESPACE pg_default;
+
+-- Trigger: person_person_trigger
+
+-- DROP TRIGGER IF EXISTS person_person_trigger ON public.person_person;
+
+CREATE TRIGGER person_person_trigger
+    BEFORE INSERT OR UPDATE 
+    ON public.person_person
+    FOR EACH ROW
+    EXECUTE FUNCTION public.record_data_changed();

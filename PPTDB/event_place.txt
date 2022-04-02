@@ -1,0 +1,42 @@
+-- Table: public.event_place
+
+-- DROP TABLE IF EXISTS public.event_place;
+
+CREATE TABLE IF NOT EXISTS public.event_place
+(
+    id uuid NOT NULL,
+    event_id uuid NOT NULL,
+    place_id uuid NOT NULL,
+    relationship_type_id uuid NOT NULL,
+    description text COLLATE pg_catalog."default",
+    role_id uuid,
+    last_updated timestamp with time zone,
+    CONSTRAINT "Event_Place_pkey" PRIMARY KEY (id),
+    CONSTRAINT "EventID_EventTable" FOREIGN KEY (event_id)
+        REFERENCES public.event (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE,
+    CONSTRAINT "PlaceID_PlaceTable" FOREIGN KEY (place_id)
+        REFERENCES public.place (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE,
+    CONSTRAINT "RoleID_RoleTable" FOREIGN KEY (role_id)
+        REFERENCES public.role (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.event_place
+    OWNER to postgres;
+
+-- Trigger: event_place_trigger
+
+-- DROP TRIGGER IF EXISTS event_place_trigger ON public.event_place;
+
+CREATE TRIGGER event_place_trigger
+    BEFORE INSERT OR UPDATE 
+    ON public.event_place
+    FOR EACH ROW
+    EXECUTE FUNCTION public.record_data_changed();

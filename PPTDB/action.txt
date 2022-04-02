@@ -1,0 +1,30 @@
+-- Table: public.action
+
+-- DROP TABLE IF EXISTS public.action;
+
+CREATE TABLE IF NOT EXISTS public.action
+(
+    id uuid NOT NULL,
+    short_description text COLLATE pg_catalog."default" NOT NULL,
+    long_description text COLLATE pg_catalog."default",
+    start_date_time timestamp with time zone,
+    end_date_time timestamp with time zone,
+    tags text[] COLLATE pg_catalog."default",
+    last_updated timestamp with time zone,
+    CONSTRAINT "Action_pkey" PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.action
+    OWNER to postgres;
+
+-- Trigger: action_trigger
+
+-- DROP TRIGGER IF EXISTS action_trigger ON public.action;
+
+CREATE TRIGGER action_trigger
+    BEFORE INSERT OR UPDATE 
+    ON public.action
+    FOR EACH ROW
+    EXECUTE FUNCTION public.record_data_changed();

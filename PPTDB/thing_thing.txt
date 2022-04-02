@@ -1,0 +1,58 @@
+-- Table: public.thing_thing
+
+-- DROP TABLE IF EXISTS public.thing_thing;
+
+CREATE TABLE IF NOT EXISTS public.thing_thing
+(
+    id uuid NOT NULL,
+    thing_id_a uuid NOT NULL,
+    thing_id_b uuid NOT NULL,
+    relationship_type_id uuid NOT NULL,
+    description text COLLATE pg_catalog."default",
+    role_id uuid,
+    last_updated timestamp with time zone,
+    CONSTRAINT "Thing_Thing_pkey" PRIMARY KEY (id),
+    CONSTRAINT "RoleID_RoleTable" FOREIGN KEY (role_id)
+        REFERENCES public.role (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE,
+    CONSTRAINT "ThingID_A_ThingTable" FOREIGN KEY (thing_id_a)
+        REFERENCES public.thing (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE,
+    CONSTRAINT "ThingID_B_ThingTable" FOREIGN KEY (thing_id_b)
+        REFERENCES public.thing (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.thing_thing
+    OWNER to postgres;
+-- Index: fki_ThingID_A_ThingTable
+
+-- DROP INDEX IF EXISTS public."fki_ThingID_A_ThingTable";
+
+CREATE INDEX IF NOT EXISTS "fki_ThingID_A_ThingTable"
+    ON public.thing_thing USING btree
+    (thing_id_a ASC NULLS LAST)
+    TABLESPACE pg_default;
+-- Index: fki_ThingID_B_ThingTable
+
+-- DROP INDEX IF EXISTS public."fki_ThingID_B_ThingTable";
+
+CREATE INDEX IF NOT EXISTS "fki_ThingID_B_ThingTable"
+    ON public.thing_thing USING btree
+    (thing_id_b ASC NULLS LAST)
+    TABLESPACE pg_default;
+
+-- Trigger: thing_thing_trigger
+
+-- DROP TRIGGER IF EXISTS thing_thing_trigger ON public.thing_thing;
+
+CREATE TRIGGER thing_thing_trigger
+    BEFORE INSERT OR UPDATE 
+    ON public.thing_thing
+    FOR EACH ROW
+    EXECUTE FUNCTION public.record_data_changed();

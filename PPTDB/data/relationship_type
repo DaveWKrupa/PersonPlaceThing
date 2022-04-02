@@ -1,0 +1,27 @@
+23ff9eca-74b9-4ccc-b8d3-9610f4a43f0a,is supervisor of,Denotes person is the supervisor of a role associated with person.,"{person,employment}",2022-03-29 18:21:00-07
+c2279c9b-89c7-4243-a167-85109bd77f72,is hosting,Denotes who is the host of an event using a role associated with a person (e.g. Role = Host or Sponsor),"{person,social}",2022-03-29 18:21:00-07
+96ac6173-bcb4-498b-9d99-4cca4e14a2bb,is a(n),"Denotes a relationship between classes where when '"Class A is a Class B'", then Class A is a subclass of Class B, and Class B is a superclass of Class A.",{basic},2022-03-29 18:21:00-07
+0d67eb40-4701-48af-b859-3995a61cdcf8,has a(n),"Denotes a relationship between classes where when '"Class A has a Class B'", then Class B is a component of Class A.",{basic},2022-03-29 18:21:00-07
+3aec8e49-e7fc-4c73-99cb-ee8ffeccfc5a,owns,"Denotes legal ownership person has of thing, but does not indicate person has physical possession of that thing. Can also indicate legal ownership person has of place.",{basic},2022-03-29 18:21:00-07
+7a7a025a-1667-428b-a8f2-7695e4a27260,in possession of,"Denotes person is in possession of thing, but does not indicate ownership.",{basic},2022-03-29 18:21:00-07
+f6b10cff-4859-46a4-9db1-46af5fd8f783,used during,Denotes a relationship between a thing and an action.,{basic},2022-03-29 18:21:00-07
+f33a52f7-7b73-43bf-8c23-b0436713ef90,used at,Denotes a relationship between a thing and an event.,{basic},2022-03-29 18:21:00-07
+4138902c-1a1f-4786-8831-5eb2cca489df,victim,Denotes a relationship where a person victim of a crime is connected to an event or action.,"{crime,person}",2022-03-29 18:21:00-07
+d13ee2c7-fe87-456f-91ea-b77d011b757d,perpetrator,Denotes a relationship where a person perpetrator of a crime is connected to an event or action.,"{crime,person}",2022-03-29 18:21:00-07
+f4c90554-054b-42be-9d78-915aaca4ee85,suspect,Denotes a relationship where a person suspect of a crime is connected to an event or action.,"{crime,person}",2022-03-29 18:21:00-07
+2fc98214-0f0e-4f43-9963-8a680611c886,works at,Denotes role associated with person is employed at place or event.,"{person,employment}",2022-03-29 18:21:00-07
+ae5c151f-d45f-42af-b779-182758d02fb7,is employer of,Denotes person is the employer of a role associated with person.,"{person,employment}",2022-03-29 18:21:00-07
+08ff0a1b-799c-4e95-a7a1-d2e111f59591,is attending,Denotes who attends an event using a role associated with a person (e.g. Role = Guest),"{person,social}",2022-03-29 18:21:00-07
+477bdec9-e33b-43c0-a12c-0efd0377488b,married to,Denotes a relationship between a person and a role of another person (i.e. where role is wife or husband),"{person,family}",2022-03-29 18:21:00-07
+e80b8f4d-74c8-4221-b882-101ca804d61d,killed by,Denotes a relationship between a person and another person or thing.,"{person,crime}",2022-03-29 18:21:00-07
+57720c92-3b28-40f9-85cb-dba772efe1cc,came from,Denotes origination of thing or person.,{basic},2022-03-29 18:21:00-07
+7bbba8bd-3505-4d0a-86aa-6ce7e9e093f9,used for,"Denotes that a thing is used to do something for a person, thing or action",{basic},2022-03-29 18:21:00-07
+f94e9c84-4e0f-4f68-bc12-9fadbd4ae135,happened before,Denotes time sequence between an actions or events,{basic},2022-03-29 18:21:00-07
+796884e9-01b8-41e0-9983-b65b1bcbef56,happened at the same time as,Denotes time sequence between an actions or events,{basic},2022-03-29 18:21:00-07
+e00a54e6-ecbf-4da2-a624-a1ca99d1057a,happened after,Denotes time sequence between an actions or events,{basic},2022-03-29 18:21:00-07
+6a437be2-5aac-4e36-b2df-d804805ec129,is the,Denotes a thing is the subject of an action. (e.g. Revolver is the gun that was stolen.),{basic},2022-03-29 18:21:00-07
+efe68270-b2e5-45ce-93ed-bc05dec1f4e0,was part of,"Denotes a relationship between classes where when '"Class A was part of Class B'", then Class B is a component of Class A.",{basic},2022-03-29 18:21:00-07
+8f3d5af8-c2ed-4e30-a6d6-7699b31519a7,happened at/in,"Denotes a relationship where an action is connected to an event, or an event is connected to a place.",{basic},2022-03-29 18:21:00-07
+8a7d53b8-763c-426f-8f73-d5731a27d09a,located at/in,"Denotes a relationship between a thing or person, and place or event.",{basic},2022-03-29 18:21:00-07
+bc658328-dbb5-44cf-a4f4-c85c038cfa9b,located on,Denotes a relationship between a thing and a place or thing. (e.g. item on table),{basic},2022-03-29 18:21:00-07
+41b979aa-13f1-41ae-9d3a-6b6449e2b099,was a(n),"Denotes a relationship between classes where when '"'"Class A was a Class B'"'", then Class A was a subclass of Class B, and Class B was a superclass of Class A.",{basic},2022-04-01 17:27:01.203839-07

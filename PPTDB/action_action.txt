@@ -1,0 +1,74 @@
+-- Table: public.action_action
+
+-- DROP TABLE IF EXISTS public.action_action;
+
+CREATE TABLE IF NOT EXISTS public.action_action
+(
+    id uuid NOT NULL,
+    action_id_a uuid NOT NULL,
+    action_id_b uuid NOT NULL,
+    relationship_type_id uuid NOT NULL,
+    description text COLLATE pg_catalog."default",
+    role_id uuid,
+    last_updated timestamp with time zone,
+    CONSTRAINT "Action_Action_pkey" PRIMARY KEY (id),
+    CONSTRAINT "ActionID_A_ActionTable" FOREIGN KEY (action_id_a)
+        REFERENCES public.action (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE,
+    CONSTRAINT "ActionID_B_ActionTable" FOREIGN KEY (action_id_b)
+        REFERENCES public.action (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE,
+    CONSTRAINT "RoleID_RoleTable" FOREIGN KEY (role_id)
+        REFERENCES public.role (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.action_action
+    OWNER to postgres;
+-- Index: fki_A
+
+-- DROP INDEX IF EXISTS public."fki_A";
+
+CREATE INDEX IF NOT EXISTS "fki_A"
+    ON public.action_action USING btree
+    (role_id ASC NULLS LAST)
+    TABLESPACE pg_default;
+-- Index: fki_ActionID_A_ActionTable
+
+-- DROP INDEX IF EXISTS public."fki_ActionID_A_ActionTable";
+
+CREATE INDEX IF NOT EXISTS "fki_ActionID_A_ActionTable"
+    ON public.action_action USING btree
+    (action_id_a ASC NULLS LAST)
+    TABLESPACE pg_default;
+-- Index: fki_ActionID_B_ActionTable
+
+-- DROP INDEX IF EXISTS public."fki_ActionID_B_ActionTable";
+
+CREATE INDEX IF NOT EXISTS "fki_ActionID_B_ActionTable"
+    ON public.action_action USING btree
+    (action_id_b ASC NULLS LAST)
+    TABLESPACE pg_default;
+-- Index: fki_Action_Action_RoleID
+
+-- DROP INDEX IF EXISTS public."fki_Action_Action_RoleID";
+
+CREATE INDEX IF NOT EXISTS "fki_Action_Action_RoleID"
+    ON public.action_action USING btree
+    (role_id ASC NULLS LAST)
+    TABLESPACE pg_default;
+
+-- Trigger: action_action_trigger
+
+-- DROP TRIGGER IF EXISTS action_action_trigger ON public.action_action;
+
+CREATE TRIGGER action_action_trigger
+    BEFORE INSERT OR UPDATE 
+    ON public.action_action
+    FOR EACH ROW
+    EXECUTE FUNCTION public.record_data_changed();

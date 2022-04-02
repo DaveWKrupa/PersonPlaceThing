@@ -1,0 +1,34 @@
+-- Table: public.place
+
+-- DROP TABLE IF EXISTS public.place;
+
+CREATE TABLE IF NOT EXISTS public.place
+(
+    id uuid NOT NULL,
+    short_description text COLLATE pg_catalog."default" NOT NULL,
+    long_description text COLLATE pg_catalog."default",
+    phone_number text COLLATE pg_catalog."default",
+    street text COLLATE pg_catalog."default",
+    street2 text COLLATE pg_catalog."default",
+    city text COLLATE pg_catalog."default",
+    state text COLLATE pg_catalog."default",
+    zip_code text COLLATE pg_catalog."default",
+    tags text[] COLLATE pg_catalog."default",
+    last_updated timestamp with time zone,
+    CONSTRAINT "Place_pkey" PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.place
+    OWNER to postgres;
+
+-- Trigger: place_trigger
+
+-- DROP TRIGGER IF EXISTS place_trigger ON public.place;
+
+CREATE TRIGGER place_trigger
+    BEFORE INSERT OR UPDATE 
+    ON public.place
+    FOR EACH ROW
+    EXECUTE FUNCTION public.record_data_changed();

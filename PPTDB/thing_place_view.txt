@@ -1,0 +1,24 @@
+-- View: public.thing_place_view
+
+-- DROP VIEW public.thing_place_view;
+
+CREATE OR REPLACE VIEW public.thing_place_view
+ AS
+ SELECT thing.short_description AS thing_short_description,
+    relationship_type.short_description AS relationship_type_short_description,
+    place.short_description AS place_short_description,
+    thing.long_description AS thing_long_description,
+    place.long_description AS place_long_description,
+    thing_place.description AS thing_place_description,
+    thing_place.thing_id,
+    thing_place.place_id,
+    thing_place.relationship_type_id,
+    thing_place.id AS thing_place_id
+   FROM thing
+     JOIN thing_place ON thing.id = thing_place.thing_id
+     JOIN place ON place.id = thing_place.place_id
+     JOIN relationship_type ON relationship_type.id = thing_place.relationship_type_id;
+
+ALTER TABLE public.thing_place_view
+    OWNER TO postgres;
+

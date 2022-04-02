@@ -1,0 +1,28 @@
+-- Table: public.relationship_type
+
+-- DROP TABLE IF EXISTS public.relationship_type;
+
+CREATE TABLE IF NOT EXISTS public.relationship_type
+(
+    id uuid NOT NULL,
+    short_description text COLLATE pg_catalog."default" NOT NULL,
+    long_description text COLLATE pg_catalog."default",
+    tags text[] COLLATE pg_catalog."default",
+    last_updated timestamp with time zone,
+    CONSTRAINT "RelationshipType_pkey" PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.relationship_type
+    OWNER to postgres;
+
+-- Trigger: relationship_type_trigger
+
+-- DROP TRIGGER IF EXISTS relationship_type_trigger ON public.relationship_type;
+
+CREATE TRIGGER relationship_type_trigger
+    BEFORE INSERT OR UPDATE 
+    ON public.relationship_type
+    FOR EACH ROW
+    EXECUTE FUNCTION public.record_data_changed();

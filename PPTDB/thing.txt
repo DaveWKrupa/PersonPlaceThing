@@ -1,0 +1,28 @@
+-- Table: public.thing
+
+-- DROP TABLE IF EXISTS public.thing;
+
+CREATE TABLE IF NOT EXISTS public.thing
+(
+    id uuid NOT NULL,
+    short_description text COLLATE pg_catalog."default" NOT NULL,
+    long_description text COLLATE pg_catalog."default",
+    tags text[] COLLATE pg_catalog."default",
+    last_updated timestamp with time zone,
+    CONSTRAINT "Thing_pkey" PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.thing
+    OWNER to postgres;
+
+-- Trigger: thing_trigger
+
+-- DROP TRIGGER IF EXISTS thing_trigger ON public.thing;
+
+CREATE TRIGGER thing_trigger
+    BEFORE INSERT OR UPDATE 
+    ON public.thing
+    FOR EACH ROW
+    EXECUTE FUNCTION public.record_data_changed();

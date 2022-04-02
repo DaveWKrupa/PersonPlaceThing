@@ -1,0 +1,50 @@
+-- Table: public.action_place
+
+-- DROP TABLE IF EXISTS public.action_place;
+
+CREATE TABLE IF NOT EXISTS public.action_place
+(
+    id uuid NOT NULL,
+    action_id uuid NOT NULL,
+    place_id uuid NOT NULL,
+    relationship_type_id uuid NOT NULL,
+    description text COLLATE pg_catalog."default",
+    role_id uuid,
+    last_updated timestamp with time zone,
+    CONSTRAINT "Action_Place_pkey" PRIMARY KEY (id),
+    CONSTRAINT "ActionID-ActionTable" FOREIGN KEY (action_id)
+        REFERENCES public.action (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE,
+    CONSTRAINT "PlaceID_PlaceTable" FOREIGN KEY (place_id)
+        REFERENCES public.place (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE,
+    CONSTRAINT "RoleID_RoleTable" FOREIGN KEY (role_id)
+        REFERENCES public.role (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.action_place
+    OWNER to postgres;
+-- Index: fki_PlaceID_PlaceTable
+
+-- DROP INDEX IF EXISTS public."fki_PlaceID_PlaceTable";
+
+CREATE INDEX IF NOT EXISTS "fki_PlaceID_PlaceTable"
+    ON public.action_place USING btree
+    (place_id ASC NULLS LAST)
+    TABLESPACE pg_default;
+
+-- Trigger: action_place_trigger
+
+-- DROP TRIGGER IF EXISTS action_place_trigger ON public.action_place;
+
+CREATE TRIGGER action_place_trigger
+    BEFORE INSERT OR UPDATE 
+    ON public.action_place
+    FOR EACH ROW
+    EXECUTE FUNCTION public.record_data_changed();

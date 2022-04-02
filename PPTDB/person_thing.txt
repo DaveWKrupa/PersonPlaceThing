@@ -1,0 +1,51 @@
+-- Table: public.person_thing
+
+-- DROP TABLE IF EXISTS public.person_thing;
+
+CREATE TABLE IF NOT EXISTS public.person_thing
+(
+    id uuid NOT NULL,
+    person_id uuid NOT NULL,
+    thing_id uuid NOT NULL,
+    relationship_type_id uuid NOT NULL,
+    role_id uuid,
+    description text COLLATE pg_catalog."default",
+    last_updated timestamp with time zone,
+    CONSTRAINT "Person_Thing_pkey" PRIMARY KEY (id),
+    CONSTRAINT "PersonID_PersonTable" FOREIGN KEY (person_id)
+        REFERENCES public.person (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE,
+    CONSTRAINT "RoleID_RoleTable" FOREIGN KEY (role_id)
+        REFERENCES public.role (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+        NOT VALID,
+    CONSTRAINT "ThingID_ThingTable" FOREIGN KEY (thing_id)
+        REFERENCES public.thing (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.person_thing
+    OWNER to postgres;
+-- Index: fki_ThingID_ThingTable
+
+-- DROP INDEX IF EXISTS public."fki_ThingID_ThingTable";
+
+CREATE INDEX IF NOT EXISTS "fki_ThingID_ThingTable"
+    ON public.person_thing USING btree
+    (thing_id ASC NULLS LAST)
+    TABLESPACE pg_default;
+
+-- Trigger: person_thing_trigger
+
+-- DROP TRIGGER IF EXISTS person_thing_trigger ON public.person_thing;
+
+CREATE TRIGGER person_thing_trigger
+    BEFORE INSERT OR UPDATE 
+    ON public.person_thing
+    FOR EACH ROW
+    EXECUTE FUNCTION public.record_data_changed();

@@ -1,0 +1,38 @@
+-- Table: public.person
+
+-- DROP TABLE IF EXISTS public.person;
+
+CREATE TABLE IF NOT EXISTS public.person
+(
+    id uuid NOT NULL,
+    first_name text COLLATE pg_catalog."default" NOT NULL,
+    phone_number text COLLATE pg_catalog."default",
+    street text COLLATE pg_catalog."default",
+    street2 text COLLATE pg_catalog."default",
+    city text COLLATE pg_catalog."default",
+    state text COLLATE pg_catalog."default",
+    zip_code text COLLATE pg_catalog."default",
+    middle_name text COLLATE pg_catalog."default",
+    last_name text COLLATE pg_catalog."default",
+    prefix_name text COLLATE pg_catalog."default",
+    suffix_name text COLLATE pg_catalog."default",
+    tags text[] COLLATE pg_catalog."default",
+    last_updated timestamp with time zone,
+    CONSTRAINT "Person_pkey" PRIMARY KEY (id),
+    CONSTRAINT person_name_constraint UNIQUE (first_name, middle_name, last_name)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.person
+    OWNER to postgres;
+
+-- Trigger: person_trigger
+
+-- DROP TRIGGER IF EXISTS person_trigger ON public.person;
+
+CREATE TRIGGER person_trigger
+    BEFORE INSERT OR UPDATE 
+    ON public.person
+    FOR EACH ROW
+    EXECUTE FUNCTION public.record_data_changed();

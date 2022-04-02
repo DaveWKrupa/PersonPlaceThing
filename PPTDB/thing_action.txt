@@ -1,0 +1,43 @@
+-- Table: public.thing_action
+
+-- DROP TABLE IF EXISTS public.thing_action;
+
+CREATE TABLE IF NOT EXISTS public.thing_action
+(
+    id uuid NOT NULL,
+    action_id uuid NOT NULL,
+    thing_id uuid NOT NULL,
+    relationship_type_id uuid NOT NULL,
+    description text COLLATE pg_catalog."default",
+    role_id uuid,
+    last_updated timestamp with time zone,
+    CONSTRAINT "Action_Thing_pkey" PRIMARY KEY (id),
+    CONSTRAINT "ActionID-ActionTable" FOREIGN KEY (action_id)
+        REFERENCES public.action (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE,
+    CONSTRAINT "RoleID_RoleTable" FOREIGN KEY (role_id)
+        REFERENCES public.role (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+        NOT VALID,
+    CONSTRAINT "ThingID_ThingTable" FOREIGN KEY (thing_id)
+        REFERENCES public.thing (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.thing_action
+    OWNER to postgres;
+
+-- Trigger: thing_action_trigger
+
+-- DROP TRIGGER IF EXISTS thing_action_trigger ON public.thing_action;
+
+CREATE TRIGGER thing_action_trigger
+    BEFORE INSERT OR UPDATE 
+    ON public.thing_action
+    FOR EACH ROW
+    EXECUTE FUNCTION public.record_data_changed();

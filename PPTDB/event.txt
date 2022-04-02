@@ -1,0 +1,30 @@
+-- Table: public.event
+
+-- DROP TABLE IF EXISTS public.event;
+
+CREATE TABLE IF NOT EXISTS public.event
+(
+    id uuid NOT NULL,
+    short_description text COLLATE pg_catalog."default" NOT NULL,
+    long_description text COLLATE pg_catalog."default",
+    start_date_time timestamp with time zone,
+    end_date_time timestamp with time zone,
+    tags text[] COLLATE pg_catalog."default",
+    last_updated timestamp with time zone,
+    CONSTRAINT "Event_pkey" PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.event
+    OWNER to postgres;
+
+-- Trigger: event_trigger
+
+-- DROP TRIGGER IF EXISTS event_trigger ON public.event;
+
+CREATE TRIGGER event_trigger
+    BEFORE INSERT OR UPDATE 
+    ON public.event
+    FOR EACH ROW
+    EXECUTE FUNCTION public.record_data_changed();

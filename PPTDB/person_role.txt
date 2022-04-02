@@ -1,0 +1,37 @@
+-- Table: public.person_role
+
+-- DROP TABLE IF EXISTS public.person_role;
+
+CREATE TABLE IF NOT EXISTS public.person_role
+(
+    person_id uuid NOT NULL,
+    role_id uuid NOT NULL,
+    description text COLLATE pg_catalog."default",
+    relationship_type_id uuid,
+    id uuid NOT NULL,
+    last_updated timestamp with time zone,
+    CONSTRAINT "Person_Role2_pkey" PRIMARY KEY (id),
+    CONSTRAINT "PersonID_PersonTable2" FOREIGN KEY (person_id)
+        REFERENCES public.person (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE,
+    CONSTRAINT "RoleID_RoleTable2" FOREIGN KEY (role_id)
+        REFERENCES public.role (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.person_role
+    OWNER to postgres;
+
+-- Trigger: person_role_trigger
+
+-- DROP TRIGGER IF EXISTS person_role_trigger ON public.person_role;
+
+CREATE TRIGGER person_role_trigger
+    BEFORE INSERT OR UPDATE 
+    ON public.person_role
+    FOR EACH ROW
+    EXECUTE FUNCTION public.record_data_changed();

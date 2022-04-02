@@ -1,0 +1,66 @@
+-- Table: public.action_event
+
+-- DROP TABLE IF EXISTS public.action_event;
+
+CREATE TABLE IF NOT EXISTS public.action_event
+(
+    id uuid NOT NULL,
+    event_id uuid NOT NULL,
+    action_id uuid NOT NULL,
+    relationship_type_id uuid NOT NULL,
+    description text COLLATE pg_catalog."default",
+    role_id uuid,
+    last_updated timestamp with time zone,
+    CONSTRAINT "Event_Action_pkey" PRIMARY KEY (id),
+    CONSTRAINT "ActionID-ActionTable" FOREIGN KEY (action_id)
+        REFERENCES public.action (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE,
+    CONSTRAINT "EventID_EventTable" FOREIGN KEY (event_id)
+        REFERENCES public.event (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE,
+    CONSTRAINT "RoleID_RoleTable" FOREIGN KEY (role_id)
+        REFERENCES public.role (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.action_event
+    OWNER to postgres;
+-- Index: fki_ActionID-ActionTable
+
+-- DROP INDEX IF EXISTS public."fki_ActionID-ActionTable";
+
+CREATE INDEX IF NOT EXISTS "fki_ActionID-ActionTable"
+    ON public.action_event USING btree
+    (action_id ASC NULLS LAST)
+    TABLESPACE pg_default;
+-- Index: fki_EventID_EventTable
+
+-- DROP INDEX IF EXISTS public."fki_EventID_EventTable";
+
+CREATE INDEX IF NOT EXISTS "fki_EventID_EventTable"
+    ON public.action_event USING btree
+    (event_id ASC NULLS LAST)
+    TABLESPACE pg_default;
+-- Index: fki_RoleID_RoleTable
+
+-- DROP INDEX IF EXISTS public."fki_RoleID_RoleTable";
+
+CREATE INDEX IF NOT EXISTS "fki_RoleID_RoleTable"
+    ON public.action_event USING btree
+    (role_id ASC NULLS LAST)
+    TABLESPACE pg_default;
+
+-- Trigger: action_event_trigger
+
+-- DROP TRIGGER IF EXISTS action_event_trigger ON public.action_event;
+
+CREATE TRIGGER action_event_trigger
+    BEFORE INSERT OR UPDATE 
+    ON public.action_event
+    FOR EACH ROW
+    EXECUTE FUNCTION public.record_data_changed();

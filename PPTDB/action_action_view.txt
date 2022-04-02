@@ -1,0 +1,28 @@
+-- View: public.action_action_view
+
+-- DROP VIEW public.action_action_view;
+
+CREATE OR REPLACE VIEW public.action_action_view
+ AS
+ SELECT action_a.short_description AS action_a_short_description,
+    relationship_type.short_description AS relationship_type_description,
+    action_b.short_description AS action_b_short_description,
+    action_a.start_date_time AS action_a_start_date_time,
+    action_a.end_date_time AS action_a_end_date_time,
+    action_b.start_date_time AS action_b_start_date_time,
+    action_b.end_date_time AS action_b_end_date_time,
+    action_a.long_description AS action_a_long_description,
+    action_b.long_description AS action_b_long_description,
+    action_action.description AS action_action_description,
+    action_action.action_id_a,
+    action_action.action_id_b,
+    action_action.relationship_type_id,
+    action_action.id AS action_action_id
+   FROM action action_a
+     JOIN action_action ON action_action.action_id_a = action_a.id
+     JOIN action action_b ON action_action.action_id_b = action_b.id
+     JOIN relationship_type ON action_action.relationship_type_id = relationship_type.id;
+
+ALTER TABLE public.action_action_view
+    OWNER TO postgres;
+
