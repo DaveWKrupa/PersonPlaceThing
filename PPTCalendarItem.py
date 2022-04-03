@@ -3,7 +3,7 @@ from DateTimeManager import DateTimeManager
 from PersonPlaceThingDB import PersonPlaceThingDB
 from Enums import ColumnNamesEnum
 from Constants import RECORD_NOT_FOUND, ERROR_LOADING_RECORD, \
-    RECORD_LOADED, DatabaseResult
+    RECORD_LOADED, RECORD_SAVED, DatabaseResult
 
 
 class PPTCalendarItem(PPTBaseItem):
@@ -100,8 +100,13 @@ class PPTCalendarItem(PPTBaseItem):
             self.start_date_time = data[0][ColumnNamesEnum.START_DATE_TIME]
             self.end_date_time = data[0][ColumnNamesEnum.END_DATE_TIME]
             self._tags = data[0][ColumnNamesEnum.TAGS]
+            self._last_updated = data[0][ColumnNamesEnum.LAST_UPDATED]
             return DatabaseResult(True, self._record_id, RECORD_LOADED, "")
         else:
+            self._fire_invalid_data_callback_func(RECORD_NOT_FOUND
+                                                  + " " + self._table_name
+                                                  + " " + RECORD_NOT_FOUND)
+            self._init_ppt_calendar_item()
             return DatabaseResult(False, self._record_id,
                                   ERROR_LOADING_RECORD,
                                   self._table_name + " " + RECORD_NOT_FOUND)
@@ -113,4 +118,6 @@ class PPTCalendarItem(PPTBaseItem):
         return_val = super()._save_record(data)
         if return_val.succeeded:
             self._load_ppt_calendar_item(return_val.record_id)
+            self._fire_data_saved_callback_func(self._table_name
+                                                + ": " + RECORD_SAVED)
         return return_val

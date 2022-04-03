@@ -16,21 +16,13 @@ class Action(PPTCalendarItem):
                          start_date_time, end_date_time,  tags)
 
     def load(self, record_id):
-        return_val = super()._load_ppt_calendar_item(record_id)
-        if not return_val.succeeded:
-            super()._init_ppt_calendar_item()
-
-        return return_val
+        return super()._load_ppt_calendar_item(record_id)
 
     def save(self):
         return super()._save_ppt_calendar_item()
 
     def delete(self):
-        return_val = super()._delete_record()
-        if return_val.succeeded:
-            super()._init_ppt_calendar_item()
-
-        return return_val
+        return super()._delete_record()
 
     def __str__(self):
         lines = super()._get_ppt_calendar_item_string()

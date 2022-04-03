@@ -18,7 +18,7 @@ class PPTBaseItem:
         self._record_id = RecordID(record_id).record_id
         self.short_description = short_description
         self.long_description = long_description
-        self.__last_updated = last_updated
+        self._last_updated = last_updated
         self._tags = tags
         if not self._tags:
             self._tags = list()
@@ -69,7 +69,7 @@ class PPTBaseItem:
         self.long_description = None
         self._tags = list()
         self.error_message = None
-        self.__last_updated = None
+        self._last_updated = None
 
     def _save_record(self, data=None):
 
@@ -92,7 +92,7 @@ class PPTBaseItem:
 
         return_val = PersonPlaceThingDB().save(self._table_name,
                                                self._record_id,
-                                               self.__last_updated,
+                                               self._last_updated,
                                                record_data)
 
         if return_val.succeeded:
@@ -104,8 +104,8 @@ class PPTBaseItem:
                 # reload the data to get the last_updated value
                 # from the DB
                 self._load_ppt_base_item(return_val.record_id)
-            self._fire_data_saved_callback_func(self._table_name
-                                                + ": " + RECORD_SAVED)
+                self._fire_data_saved_callback_func(self._table_name
+                                                    + ": " + RECORD_SAVED)
         elif not data:
             self._fire_invalid_data_callback_func(self._table_name
                                                   + ": " + return_val.message +
@@ -141,7 +141,7 @@ class PPTBaseItem:
             self.long_description = \
                 data[0][ColumnNamesEnum.LONG_DESCRIPTION]
             self._tags = data[0][ColumnNamesEnum.TAGS]
-            self.__last_updated = data[0][ColumnNamesEnum.LAST_UPDATED]
+            self._last_updated = data[0][ColumnNamesEnum.LAST_UPDATED]
             return DatabaseResult(True, self._record_id, RECORD_LOADED, "")
         else:
             self._fire_invalid_data_callback_func(RECORD_NOT_FOUND
