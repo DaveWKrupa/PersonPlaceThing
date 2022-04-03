@@ -6,7 +6,7 @@ from Constants import ERROR_DELETING_RECORD, NOTHING_TO_DELETE, \
     RECORD_LOADED, ERROR_LOADING_RECORD, \
     SHORT_DESCRIPTION_VALIDATION_ERROR, \
     ERROR_SAVING_RECORD, PHONE_FORMAT_ERROR, \
-    RECORD_NOT_FOUND, DatabaseResult
+    RECORD_NOT_FOUND, NULL_RECORD_ID, DatabaseResult
 
 
 class Place:
@@ -51,10 +51,15 @@ class Place:
     def tags(self):
         return self.tags
 
-    def add_tag(self, tag):
+    def add_tags(self, *args):
         if not isinstance(self.__tags, list):
             self.__tags = list()
-        self.__tags.append(tag)
+        for arg in args:
+            if not isinstance(arg, list):
+                self.__tags.append(str(arg).lower())
+            else:
+                lower_case_tags = map(lambda x: x.lower(), arg)
+                self.__tags.extend(list(lower_case_tags))
 
     def remove_tag(self, tag):
         if not isinstance(self.__tags, list):
@@ -78,11 +83,14 @@ class Place:
                                      data[0][ColumnNamesEnum.STATE],
                                      data[0][ColumnNamesEnum.ZIP_CODE])
             self.__tags = data[0][ColumnNamesEnum.TAGS]
+            self.__last_updated = data[0][ColumnNamesEnum.LAST_UPDATED]
+
             return DatabaseResult(True, self.__record_id, RECORD_LOADED, "")
         else:
             return DatabaseResult(False, self.__record_id,
                                   ERROR_LOADING_RECORD,
-                                  TableNamesEnum.PERSON + " " + RECORD_NOT_FOUND)
+                                  TableNamesEnum.PLACE + " " +
+                                  RECORD_NOT_FOUND)
 
     def save(self):
         if self.short_description and self.short_description.strip() != '':
@@ -102,21 +110,47 @@ class Place:
                                                    data)
 
             if return_val.succeeded:
-                self.__fire_data_saved_callback_func()
+                self.__fire_data_saved_callback_func(return_val.record_id,
+                                                     return_val.message)
+                self.load(return_val.record_id)
+            else:
+                if return_val.error.count(
+                        "place_short_desc_address_constraint") > 0:
+                    error_message = "Place with short description" \
+                                    " and address already " \
+                                    "exists in the database.\n" \
+                                    f"{self.short_description}\n" \
+                                    f"{str(self.address)} " \
+
+                else:
+                    error_message = return_val.error
+
+                self.__fire_invalid_data_callback_func(return_val.record_id,
+                                                       return_val.message
+                                                       + ": " +
+                                                       error_message)
 
             return return_val
         else:
-            self.__invalid_data_callback_func(SHORT_DESCRIPTION_VALIDATION_ERROR)
+            self.__fire_invalid_data_callback_func(
+                self.record_id, SHORT_DESCRIPTION_VALIDATION_ERROR)
             return DatabaseResult(False, self.record_id,
-                                  ERROR_SAVING_RECORD, SHORT_DESCRIPTION_VALIDATION_ERROR)
+                                  ERROR_SAVING_RECORD,
+                                  SHORT_DESCRIPTION_VALIDATION_ERROR)
 
     def delete(self):
-        if self.record_id:
-            return_val = PersonPlaceThingDB().delete(TableNamesEnum.PLACE, self.record_id)
+        if self.record_id and self.record_id != NULL_RECORD_ID:
+            return_val = PersonPlaceThingDB().delete(
+                TableNamesEnum.PLACE, self.record_id)
             if return_val.succeeded:
-                self.__fire_data_saved_callback_func()
+                self.__fire_data_saved_callback_func(return_val.record_id,
+                                                     return_val.message)
             return return_val
         else:
+            self.__fire_invalid_data_callback_func(self.record_id,
+                                                   ERROR_DELETING_RECORD
+                                                   + ": " +
+                                                   NOTHING_TO_DELETE)
             return DatabaseResult(False, self.record_id,
                                   ERROR_DELETING_RECORD, NOTHING_TO_DELETE)
 
@@ -136,7 +170,8 @@ class Place:
                         and character != "." \
                         and character != "-"\
                         and character != " ":
-                    self.__fire_invalid_data_callback_func(PHONE_FORMAT_ERROR)
+                    self.__fire_invalid_data_callback_func(self.record_id,
+                                                           PHONE_FORMAT_ERROR)
                     return False
 
         return True
@@ -158,12 +193,14 @@ class Place:
         else:
             return ''
 
-    def __fire_data_saved_callback_func(self):
+    def __fire_data_saved_callback_func(self, record_id, message):
         if self.__data_saved_callback_func:
-            self.__data_saved_callback_func()
+            self.__data_saved_callback_func(table_name=TableNamesEnum.PERSON,
+                                            record_id=record_id,
+                                            message=message)
 
-    def __fire_invalid_data_callback_func(self, message):
+    def __fire_invalid_data_callback_func(self, record_id, message):
         if self.__invalid_data_callback_func:
             self.__invalid_data_callback_func(table_name=TableNamesEnum.PERSON,
-                                              record_id=self.__record_id,
+                                              record_id=record_id,
                                               message=message)

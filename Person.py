@@ -4,7 +4,7 @@ from PersonPlaceThingDB import PersonPlaceThingDB
 from Constants import PHONE_FORMAT_ERROR, DatabaseResult, \
     ERROR_DELETING_RECORD, NOTHING_TO_DELETE, RECORD_LOADED, \
     ERROR_LOADING_RECORD, RECORD_NOT_FOUND, \
-    ERROR_SAVING_RECORD, PERSON_NAME_VALIDATION_ERROR
+    ERROR_SAVING_RECORD, PERSON_NAME_VALIDATION_ERROR, NULL_RECORD_ID
 from Enums import TableNamesEnum, ColumnNamesEnum
 
 
@@ -26,7 +26,8 @@ class Person:
         self.prefix_name = prefix_name
         self.suffix_name = suffix_name
         self.__phone_number = phone_number
-        self.__address = Address(invalid_data_callback_func, street, street2, city, state, zip_code)
+        self.__address = Address(invalid_data_callback_func,
+                                 street, street2, city, state, zip_code)
         self.__tags = tags
         if not self.__tags:
             self.__tags = list()
@@ -98,12 +99,16 @@ class Person:
                                      data[0][ColumnNamesEnum.STATE],
                                      data[0][ColumnNamesEnum.ZIP_CODE])
             self.__tags = data[0][ColumnNamesEnum.TAGS]
-            return DatabaseResult(True, self.__record_id, TableNamesEnum.PERSON
+            self.__last_updated = data[0][ColumnNamesEnum.LAST_UPDATED]
+
+            return DatabaseResult(True, self.__record_id,
+                                  TableNamesEnum.PERSON
                                   + " " + RECORD_LOADED, "")
         else:
             return DatabaseResult(False, self.__record_id,
                                   ERROR_LOADING_RECORD,
-                                  TableNamesEnum.PERSON + " " + RECORD_NOT_FOUND)
+                                  TableNamesEnum.PERSON
+                                  + " " + RECORD_NOT_FOUND)
 
     def save(self):
         if (self.first_name and self.first_name.strip() != '') \
@@ -126,30 +131,49 @@ class Person:
                                                    self.__record_id,
                                                    self.__last_updated, data)
             if return_val.succeeded:
-                self.__fire_data_saved_callback_func(return_val.message)
+                self.__fire_data_saved_callback_func(return_val.record_id,
+                                                     return_val.message)
                 self.load(return_val.record_id)
+            else:
+                if return_val.error.count("person_name_constraint") > 0:
+                    error_message = "Person with name " \
+                        f"{self.first_name} {self.middle_name} {self.last_name} " \
+                        "already exists in the database."
+                else:
+                    error_message = return_val.error
+
+                self.__fire_invalid_data_callback_func(return_val.record_id,
+                                                       return_val.message
+                                                       + ": " +
+                                                       error_message)
 
             return return_val
         else:
-            self.__invalid_data_callback_func(PERSON_NAME_VALIDATION_ERROR)
+            self.__fire_invalid_data_callback_func(
+                self.record_id, PERSON_NAME_VALIDATION_ERROR)
             return DatabaseResult(False, self.record_id,
                                   ERROR_SAVING_RECORD,
                                   PERSON_NAME_VALIDATION_ERROR)
 
     def delete(self):
-        if self.record_id:
+        if self.record_id and self.record_id != NULL_RECORD_ID:
             return_val = PersonPlaceThingDB().delete(TableNamesEnum.PERSON,
                                                      self.record_id)
             if return_val.succeeded:
-                self.__fire_data_saved_callback_func(return_val.message)
+                self.__fire_data_saved_callback_func(return_val.record_id,
+                                                     return_val.message)
             return return_val
         else:
+            self.__fire_invalid_data_callback_func(self.record_id,
+                                                   ERROR_DELETING_RECORD
+                                                   + ": " +
+                                                   NOTHING_TO_DELETE)
             return DatabaseResult(False, self.record_id,
                                   ERROR_DELETING_RECORD, NOTHING_TO_DELETE)
 
     def __init_person(self):
         self.__record_id = None
-        self.__record_id = RecordID().record_id
+        self.__record_id = NULL_RECORD_ID
         self.first_name = None
         self.middle_name = None
         self.last_name = None
@@ -175,7 +199,8 @@ class Person:
                         and character != "." \
                         and character != "-"\
                         and character != " ":
-                    self.__fire_invalid_data_callback_func(PHONE_FORMAT_ERROR)
+                    self.__fire_invalid_data_callback_func(
+                        self.record_id, PHONE_FORMAT_ERROR)
                     return False
         return True
 
@@ -199,14 +224,14 @@ class Person:
         else:
             return ''
 
-    def __fire_data_saved_callback_func(self, message):
+    def __fire_data_saved_callback_func(self, record_id, message):
         if self.__data_saved_callback_func:
-            self.__data_saved_callback_func(table_name=self._table_name,
-                                            record_id=self.record_id,
+            self.__data_saved_callback_func(table_name=TableNamesEnum.PERSON,
+                                            record_id=record_id,
                                             message=message)
 
-    def __fire_invalid_data_callback_func(self, message):
+    def __fire_invalid_data_callback_func(self, record_id, message):
         if self.__invalid_data_callback_func:
             self.__invalid_data_callback_func(table_name=TableNamesEnum.PERSON,
-                                              record_id=self.__record_id,
+                                              record_id=record_id,
                                               message=message)

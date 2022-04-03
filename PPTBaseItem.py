@@ -1,9 +1,9 @@
 from RecordID import RecordID
 from PersonPlaceThingDB import PersonPlaceThingDB
-from Constants import SHORT_DESCRIPTION_VALIDATION_ERROR, ERROR_SAVING_RECORD, \
-    ERROR_LOADING_RECORD, NOTHING_TO_DELETE, \
+from Constants import SHORT_DESCRIPTION_VALIDATION_ERROR, \
+    ERROR_SAVING_RECORD, ERROR_LOADING_RECORD, NOTHING_TO_DELETE, \
     ERROR_DELETING_RECORD, RECORD_NOT_FOUND, \
-    RECORD_LOADED, RECORD_SAVED, RECORD_DELETED, DatabaseResult
+    RECORD_LOADED, RECORD_SAVED, NULL_RECORD_ID, DatabaseResult
 from Enums import ColumnNamesEnum
 
 
@@ -114,7 +114,7 @@ class PPTBaseItem:
         return return_val
 
     def _delete_record(self):
-        if self.record_id and self.record_id != RecordID().record_id:  # not null value
+        if self.record_id and self.record_id != NULL_RECORD_ID:
             return_val = \
                 PersonPlaceThingDB().delete(self._table_name, self.record_id)
             if return_val.succeeded:
@@ -122,7 +122,8 @@ class PPTBaseItem:
                 self._init_ppt_base_item()
             else:
                 self._fire_invalid_data_callback_func(return_val.message
-                                                      + " " + return_val.error)
+                                                      + " " +
+                                                      return_val.error)
             return return_val
         else:
             self._fire_invalid_data_callback_func(ERROR_DELETING_RECORD
@@ -148,8 +149,9 @@ class PPTBaseItem:
                                                   + " " + RECORD_NOT_FOUND)
             self._init_ppt_base_item()
             return DatabaseResult(False, self._record_id,
-                                   ERROR_LOADING_RECORD,
-                                   self._table_name + " " + RECORD_NOT_FOUND)
+                                  ERROR_LOADING_RECORD,
+                                  self._table_name + " " +
+                                  RECORD_NOT_FOUND)
 
     def _fire_data_saved_callback_func(self, message):
         if self.__data_saved_callback_func:
