@@ -5,7 +5,7 @@ from Constants import YYYY_MM_DD_HH_MM_SS_FORMAT, YYYY_MM_DD_HH_MM_SS
 
 
 class DateTimeManager:
-    def __init__(self, invalid_data_callback_func=None,
+    def __init__(self, invalid_data_callback_func,
                  start_date_time=None, end_date_time=None):
         self.__invalid_data_callback_func = invalid_data_callback_func
         self.__start_date = None

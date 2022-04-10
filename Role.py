@@ -3,8 +3,8 @@ from PPTBaseItem import PPTBaseItem
 
 
 class Role(PPTBaseItem):
-    def __init__(self, data_saved_callback_func=None,
-                 invalid_data_callback_func=None,
+    def __init__(self, data_saved_callback_func,
+                 invalid_data_callback_func,
                  record_id=None, last_updated=None,
                  short_description=None, long_description=None, tags=None):
         super().__init__(TableNamesEnum.ROLE, data_saved_callback_func,

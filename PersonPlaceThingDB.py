@@ -267,11 +267,12 @@ class PersonPlaceThingDB:
             add_a_comma = False
 
             for k, v in data.items():
-                if not add_a_comma:
-                    update_statement += k + " = %s"
-                    add_a_comma = True
-                else:
-                    update_statement += ", " + k + " = %s"
+                if v:
+                    if not add_a_comma:
+                        update_statement += k + " = %s"
+                        add_a_comma = True
+                    else:
+                        update_statement += ", " + k + " = %s"
 
         update_statement += f" WHERE id = %s and last_updated = '{last_updated}';"
         return update_statement
@@ -285,8 +286,9 @@ class PersonPlaceThingDB:
             place_holders = ""
 
             for k, v in data.items():
-                insert_statement += ", " + k
-                place_holders += ", %s"
+                if v:
+                    insert_statement += ", " + k
+                    place_holders += ", %s"
 
             insert_statement += ") VALUES (%s " + place_holders + ");"
 
@@ -323,7 +325,8 @@ class PersonPlaceThingDB:
             param_vals.append(str(record_id))
 
         for k, v in data.items():
-            param_vals.append(v)
+            if v:
+                param_vals.append(str(v))
 
         if not record_id_first:
             # append the record_id on the end for update

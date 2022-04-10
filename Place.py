@@ -10,8 +10,8 @@ from Constants import ERROR_DELETING_RECORD, NOTHING_TO_DELETE, \
 
 
 class Place:
-    def __init__(self, data_saved_callback_func=None,
-                 invalid_data_callback_fun=None,
+    def __init__(self, data_saved_callback_func,
+                 invalid_data_callback_fun,
                  record_id=None, last_updated=None,
                  short_description=None, long_description=None,
                  phone_number=None, street=None, street2=None,
@@ -23,7 +23,8 @@ class Place:
         self.short_description = short_description
         self.long_description = long_description
         self.__phone_number = phone_number
-        self.__address = Address(street, street2, city, state, zip_code)
+        self.__address = Address(self.invalid_data_callback_func,
+                                 street, street2, city, state, zip_code)
         self.__tags = tags
         if not self.__tags:
             self.__tags = list()
@@ -77,7 +78,8 @@ class Place:
             self.short_description = data[0][ColumnNamesEnum.SHORT_DESCRIPTION]
             self.long_description = data[0][ColumnNamesEnum.LONG_DESCRIPTION]
             self.__phone_number = data[0][ColumnNamesEnum.PHONE_NUMBER]
-            self.__address = Address(data[0][ColumnNamesEnum.STREET],
+            self.__address = Address(self.invalid_data_callback_func,
+                                     data[0][ColumnNamesEnum.STREET],
                                      data[0][ColumnNamesEnum.STREET2],
                                      data[0][ColumnNamesEnum.CITY],
                                      data[0][ColumnNamesEnum.STATE],
@@ -195,12 +197,20 @@ class Place:
 
     def __fire_data_saved_callback_func(self, record_id, message):
         if self.__data_saved_callback_func:
-            self.__data_saved_callback_func(table_name=TableNamesEnum.PERSON,
+            self.__data_saved_callback_func(table_name=TableNamesEnum.PLACE,
                                             record_id=record_id,
                                             message=message)
 
     def __fire_invalid_data_callback_func(self, record_id, message):
         if self.__invalid_data_callback_func:
-            self.__invalid_data_callback_func(table_name=TableNamesEnum.PERSON,
+            self.__invalid_data_callback_func(table_name=TableNamesEnum.PLACE,
                                               record_id=record_id,
                                               message=message)
+
+    def invalid_data_callback_func(self, **kwargs):
+        for k, v in kwargs.items():
+            if k == "message":
+                self.__fire_invalid_data_callback_func(self.record_id, v)
+                break
+
+

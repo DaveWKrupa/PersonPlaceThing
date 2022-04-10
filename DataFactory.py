@@ -162,9 +162,6 @@ class EventFactory(PPTBaseFactory):
     def get_by_tags(self, tags):
         return self.__load_dictionary(self._get_by_tags(tags))
 
-    def get_person_events(self, person_id):
-        pass
-
     def __load_dictionary(self, data):
         event_dictionary = dict()
         for event_dict in data:

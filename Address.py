@@ -3,7 +3,7 @@ from Constants import ZIP_CODE_FORMAT_ERROR
 
 
 class Address:
-    def __init__(self, invalid_data_callback_func=None,
+    def __init__(self, invalid_data_callback_func,
                  street=None, street2=None,
                  city=None, state=None, zip_code=None):
         self.__invalid_data_callback_func = invalid_data_callback_func
@@ -21,12 +21,19 @@ class Address:
     @zip_code.setter
     def zip_code(self, value):
         if value and value.strip() != '':
+            invalid = False
             for character in value:
                 if not character.isnumeric() \
                         and character != "-":
-                    self.__fire_invalid_data_callback_func(ZIP_CODE_FORMAT_ERROR)
-                else:
-                    self.__zip_code = value
+                    invalid = True
+                    break
+            if invalid:
+                self.__zip_code = None
+                self.__fire_invalid_data_callback_func(ZIP_CODE_FORMAT_ERROR)
+            else:
+                self.__zip_code = value
+        else:
+            self.__zip_code = None
 
     def __str__(self):
         lines = []

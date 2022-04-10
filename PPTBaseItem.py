@@ -8,11 +8,11 @@ from Enums import ColumnNamesEnum
 
 
 class PPTBaseItem:
-    def __init__(self, table_name, data_saved_callback_func=None,
-                 invalid_data_callback_func=None, record_id=None,
+    def __init__(self, table_name, data_saved_callback_func,
+                 invalid_data_callback_func, record_id=None,
                  short_description=None, long_description=None, tags=None,
                  last_updated=None):
-        self.__data_saved_callback_func = data_saved_callback_func
+        self._data_saved_callback_func = data_saved_callback_func
         self._invalid_data_callback_func = invalid_data_callback_func
         self._table_name = table_name
         self._record_id = RecordID(record_id).record_id
@@ -58,7 +58,7 @@ class PPTBaseItem:
             lines.append(self.short_description)
         if self.long_description:
             lines.append(self.long_description)
-        if len(self._tags) > 0:
+        if self._tags and len(self._tags) > 0:
             lines.append(",".join(self._tags))
         return lines
 
@@ -154,8 +154,8 @@ class PPTBaseItem:
                                   RECORD_NOT_FOUND)
 
     def _fire_data_saved_callback_func(self, message):
-        if self.__data_saved_callback_func:
-            self.__data_saved_callback_func(table_name=self._table_name,
+        if self._data_saved_callback_func:
+            self._data_saved_callback_func(table_name=self._table_name,
                                             record_id=self.record_id,
                                             message=message)
 

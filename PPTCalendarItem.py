@@ -7,8 +7,8 @@ from Constants import RECORD_NOT_FOUND, ERROR_LOADING_RECORD, \
 
 
 class PPTCalendarItem(PPTBaseItem):
-    def __init__(self, table_name, data_saved_callback_func=None,
-                 invalid_data_callback_func=None,
+    def __init__(self, table_name, data_saved_callback_func,
+                 invalid_data_callback_func,
                  record_id=None, last_updated=None,
                  short_description=None, long_description=None,
                  start_date_time=None, end_date_time=None, tags=None):
@@ -80,11 +80,11 @@ class PPTCalendarItem(PPTBaseItem):
         return str(self.__time_span)
 
     def _init_ppt_calendar_item(self):
-        super()._init_ppt_base_item()
-        self.__time_span = DateTimeManager(super()._invalid_data_callback_func)
+        self._init_ppt_base_item()
+        self.__time_span = DateTimeManager(self._invalid_data_callback_func)
 
     def _get_ppt_calendar_item_string(self):
-        lines = super()._get_ppt_base_item_string()
+        lines = self._get_ppt_base_item_string()
         if self.start_date_time:
             lines.append(f"Start Date: {str(self.__time_span.start_date_time)}")
         if self.end_date_time:
@@ -104,8 +104,8 @@ class PPTCalendarItem(PPTBaseItem):
             return DatabaseResult(True, self._record_id, RECORD_LOADED, "")
         else:
             self._fire_invalid_data_callback_func(RECORD_NOT_FOUND
-                                                  + " " + self._table_name
-                                                  + " " + RECORD_NOT_FOUND)
+                                                     + " " + self._table_name
+                                                     + " " + RECORD_NOT_FOUND)
             self._init_ppt_calendar_item()
             return DatabaseResult(False, self._record_id,
                                   ERROR_LOADING_RECORD,
@@ -115,9 +115,9 @@ class PPTCalendarItem(PPTBaseItem):
         data = {ColumnNamesEnum.START_DATE_TIME: self.start_date_time,
                 ColumnNamesEnum.END_DATE_TIME: self.end_date_time}
 
-        return_val = super()._save_record(data)
+        return_val = self._save_record(data)
         if return_val.succeeded:
             self._load_ppt_calendar_item(return_val.record_id)
             self._fire_data_saved_callback_func(self._table_name
-                                                + ": " + RECORD_SAVED)
+                                                   + ": " + RECORD_SAVED)
         return return_val

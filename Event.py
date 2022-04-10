@@ -3,8 +3,8 @@ from PPTCalendarItem import PPTCalendarItem
 
 
 class Event(PPTCalendarItem):
-    def __init__(self, data_saved_callback_func=None,
-                 invalid_data_callback_func=None,
+    def __init__(self, data_saved_callback_func,
+                 invalid_data_callback_func,
                  record_id=None, last_updated=None,
                  short_description=None, long_description=None,
                  start_date_time=None, end_date_time=None, tags=None):

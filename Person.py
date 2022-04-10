@@ -9,8 +9,8 @@ from Enums import TableNamesEnum, ColumnNamesEnum
 
 
 class Person:
-    def __init__(self, data_saved_callback_func=None,
-                 invalid_data_callback_func=None,
+    def __init__(self, data_saved_callback_func,
+                 invalid_data_callback_func,
                  record_id=None, last_updated=None,
                  first_name=None, middle_name=None, last_name=None,
                  prefix_name=None, suffix_name=None,
@@ -26,14 +26,14 @@ class Person:
         self.prefix_name = prefix_name
         self.suffix_name = suffix_name
         self.__phone_number = phone_number
-        self.__address = Address(invalid_data_callback_func,
+        self.__address = Address(self.invalid_data_callback_func,
                                  street, street2, city, state, zip_code)
         self.__tags = tags
         if not self.__tags:
             self.__tags = list()
         elif not isinstance(self.__tags, list):
             self.__tags = list()
-        self.__person_events = None
+        # self.__person_events = None
 
     @property
     def record_id(self):
@@ -235,3 +235,9 @@ class Person:
             self.__invalid_data_callback_func(table_name=TableNamesEnum.PERSON,
                                               record_id=record_id,
                                               message=message)
+
+    def invalid_data_callback_func(self, **kwargs):
+        for k, v in kwargs.items():
+            if k == "message":
+                self.__fire_invalid_data_callback_func(self.record_id, v)
+                break
