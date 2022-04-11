@@ -326,7 +326,10 @@ class PersonPlaceThingDB:
 
         for k, v in data.items():
             if v:
-                param_vals.append(str(v))
+                if str(type(v)) == "<class 'uuid.UUID'>":
+                    param_vals.append(str(v))
+                else:
+                    param_vals.append(v)
 
         if not record_id_first:
             # append the record_id on the end for update

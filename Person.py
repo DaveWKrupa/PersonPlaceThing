@@ -217,7 +217,7 @@ class Person:
             lines.append(str(self.address))
         if self.phone_number:
             lines.append(self.phone_number)
-        if len(self.__tags) > 0:
+        if self.__tags and len(self.__tags) > 0:
             lines.append(",".join(self.__tags))
         if len(lines) > 0:
             return '\n'.join(lines)

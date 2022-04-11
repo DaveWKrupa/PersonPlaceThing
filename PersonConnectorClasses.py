@@ -290,10 +290,10 @@ class PersonPersonConnector(PPTBaseConnector):
         self.person_id_b = person_id_b
         self.person_person_id = person_person_id
 
-    def get_person_left(self):
+    def get_person_a(self):
         return self._get_person(self.person_id_a)
 
-    def get_person_right(self):
+    def get_person_b(self):
         return self._get_person(self.person_id_b)
 
     def get_role(self):
