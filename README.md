@@ -16,17 +16,26 @@ Roles can also be used to describe connections between other classes beyond the 
 RelationshipTypes should be generic connection words between other classes that can be used to make a sentence.
 
 For example RelationshipType = 'is a'
+
 Person = Betty
+
 Role = lawyer
+
 Person -> RelationshipType -> Role
 
 Betty is a lawyer
 
+
 Another example using both RelationshipType and Role
+
 Thing1 = steering wheel
+
 Thing2 = Dodge truck
+
 RelationshipType = 'is a component of'
+
 Role = 'directional control mechanism'
+
 Thing1 -> RelationshipType -> Thing2 -> Role
 
 The steering wheel is a component of the Dodge truck and is the directional control mechanism.
