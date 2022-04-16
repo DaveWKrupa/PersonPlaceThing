@@ -1,3 +1,7 @@
+# All table and column names are stored in
+# classes designed to act as enums
+
+
 class TableNamesEnum:
     PERSON = "person"
     PLACE = "place"

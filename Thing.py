@@ -1,6 +1,9 @@
 from Enums import TableNamesEnum
 from PPTBaseItem import PPTBaseItem
 
+# The Thing class can be used for anything that is
+# not a Person, Place, Event, or Action.
+
 
 class Thing(PPTBaseItem):
     def __init__(self, data_saved_callback_func,

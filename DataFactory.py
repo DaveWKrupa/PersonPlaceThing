@@ -9,6 +9,8 @@ from Action import Action
 from Role import Role
 from RelationshipType import RelationshipType
 
+# Factory classes for the basic objects
+
 
 class TagsList:
 

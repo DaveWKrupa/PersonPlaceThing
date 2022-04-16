@@ -3,6 +3,8 @@ from Constants import YYYY_MM_DD, YYYY_MM_DD_FORMAT
 from Constants import HH_MM_SS, HH_MM_SS_FORMAT
 from Constants import YYYY_MM_DD_HH_MM_SS_FORMAT, YYYY_MM_DD_HH_MM_SS
 
+# The DateTimeManager class can be used by other classes
+# that have dates and times as a component.
 
 class DateTimeManager:
     def __init__(self, invalid_data_callback_func,

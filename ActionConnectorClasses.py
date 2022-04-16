@@ -1,6 +1,9 @@
 from PPTBaseConnector import PPTBaseConnector
 from Enums import TableNamesEnum, ColumnNamesEnum
 
+# Actions can be tied to Events using the
+# ActionEventConnector class
+
 
 class ActionEventConnector(PPTBaseConnector):
     def __init__(self,
@@ -66,7 +69,11 @@ class ActionEventConnector(PPTBaseConnector):
         self.event_id = None
         self.action_event_id = None
         
-        
+
+# Actions can be tied to Places using the
+# ActionPlaceConnector class
+
+
 class ActionPlaceConnector(PPTBaseConnector):
     def __init__(self,
                  data_saved_callback_func,
@@ -131,7 +138,10 @@ class ActionPlaceConnector(PPTBaseConnector):
         self.place_id = None
         self.action_place_id = None
         
-        
+
+# Actions can be tied to other Actions using the
+# ActionActionConnector class
+
 class ActionActionConnector(PPTBaseConnector):
     def __init__(self,
                  data_saved_callback_func,

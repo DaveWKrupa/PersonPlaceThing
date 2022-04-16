@@ -1,6 +1,10 @@
 from Enums import TableNamesEnum, ColumnNamesEnum
 from PPTCalendarItem import PPTCalendarItem
 
+# Events are calendar items.
+# They are used to describe occasions
+# or incidences of interest.
+
 
 class Event(PPTCalendarItem):
     def __init__(self, data_saved_callback_func,

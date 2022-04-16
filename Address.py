@@ -1,5 +1,7 @@
-
 from Constants import ZIP_CODE_FORMAT_ERROR
+
+# The Address class can be used by other classes
+# that have an address as a component.
 
 
 class Address:

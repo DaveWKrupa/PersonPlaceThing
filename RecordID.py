@@ -1,6 +1,8 @@
 import uuid
 from CustomExceptions import InvalidRecordIDError
 
+# The RecordID class used to generate or validate UUID fields
+
 
 class RecordID:
     def __init__(self, record_id=None):
@@ -9,7 +11,8 @@ class RecordID:
 
     @property
     def record_id(self):
-        return self.__record_id if self.__record_id is not None else uuid.UUID(int=0)
+        return self.__record_id \
+            if self.__record_id is not None else uuid.UUID(int=0)
 
     @record_id.setter
     def record_id(self, value):
@@ -17,7 +20,8 @@ class RecordID:
             if self.__is_valid_uuid(value):
                 self.__record_id = value
             else:
-                raise InvalidRecordIDError("Record ID must be in uuid format.")
+                raise InvalidRecordIDError(
+                    "Record ID must be in uuid format.")
 
     @staticmethod
     def get_new_record_id():

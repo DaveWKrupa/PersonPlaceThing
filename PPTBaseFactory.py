@@ -1,6 +1,8 @@
 from PersonPlaceThingDB import PersonPlaceThingDB
 from Enums import ColumnNamesEnum
 
+# This is the factory class for all the basic classes (e.g. PersonFactory)
+
 
 class PPTBaseFactory:
     def __init__(self, table_name):

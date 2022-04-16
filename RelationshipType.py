@@ -1,6 +1,18 @@
 from Enums import TableNamesEnum
 from PPTBaseItem import PPTBaseItem
 
+# RelationshipType class used to describe
+# the relationship between the basic classes.
+# Relationships can take any form as they are nothing
+# more than a text field description. But they
+# are best used when the RelationshipType
+# short description can be used to form a sentence
+# connecting other classes.
+# Example:
+# RelationshipType short_description = 'is a'
+# Describe relationship between a Person and a Role.
+# (e.g. Betty 'is a' lawyer.)
+
 
 class RelationshipType(PPTBaseItem):
     def __init__(self, data_saved_callback_func,

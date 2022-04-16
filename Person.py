@@ -7,6 +7,8 @@ from Constants import PHONE_FORMAT_ERROR, DatabaseResult, \
     ERROR_SAVING_RECORD, PERSON_NAME_VALIDATION_ERROR, NULL_RECORD_ID
 from Enums import TableNamesEnum, ColumnNamesEnum
 
+# The Person class used to describe people of interest
+
 
 class Person:
     def __init__(self, data_saved_callback_func,

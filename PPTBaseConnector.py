@@ -12,6 +12,10 @@ from Role import Role
 from Thing import Thing
 from RelationshipType import RelationshipType
 
+# Base class for all Connector classes.
+# It provides the CRUD operations for all classes
+# that inherit it.
+
 
 class PPTBaseConnector:
     def __init__(self, table_name,

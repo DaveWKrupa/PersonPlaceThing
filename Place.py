@@ -8,6 +8,8 @@ from Constants import ERROR_DELETING_RECORD, NOTHING_TO_DELETE, \
     ERROR_SAVING_RECORD, PHONE_FORMAT_ERROR, \
     RECORD_NOT_FOUND, NULL_RECORD_ID, DatabaseResult
 
+# The Place class used to describe locations.
+
 
 class Place:
     def __init__(self, data_saved_callback_func,

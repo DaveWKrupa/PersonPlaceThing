@@ -1,14 +1,16 @@
 from configparser import ConfigParser
-import os
+
+# The Configuration class used to read a
+# config file
 
 class Configuration:
 
     @staticmethod
-    def config(filename, section):   # filename='database.ini', section='postgresql'):
+    def config(filename, section):
         # create a parser
         parser = ConfigParser()
         # read config file
-        result = parser.read(filename)
+        parser.read(filename)
 
         # get section
         db = {}

@@ -1,6 +1,9 @@
 from PPTBaseConnector import PPTBaseConnector
 from Enums import TableNamesEnum, ColumnNamesEnum
 
+# A Thing can be connected to an Event
+# using the ThingEventConnector class
+
 
 class ThingEventConnector(PPTBaseConnector):
     def __init__(self,
@@ -65,6 +68,9 @@ class ThingEventConnector(PPTBaseConnector):
         self.thing_id = None
         self.event_id = None
         self.thing_event_id = None
+
+# A Thing can be connected to an Action
+# using the ThingActionConnector class
 
 
 class ThingActionConnector(PPTBaseConnector):
@@ -131,6 +137,9 @@ class ThingActionConnector(PPTBaseConnector):
         self.action_id = None
         self.thing_action_id = None
 
+# A Thing can be connected to a Place
+# using the ThingPlaceConnector class
+
 
 class ThingPlaceConnector(PPTBaseConnector):
     def __init__(self,
@@ -196,7 +205,10 @@ class ThingPlaceConnector(PPTBaseConnector):
         self.place_id = None
         self.thing_place_id = None
         
-        
+# A Thing can be connected to another Thing
+# using the ThingThingConnector class
+
+
 class ThingThingConnector(PPTBaseConnector):
     def __init__(self,
                  data_saved_callback_func,

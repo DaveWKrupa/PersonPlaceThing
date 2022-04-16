@@ -6,6 +6,8 @@ from Constants import SHORT_DESCRIPTION_VALIDATION_ERROR, \
     RECORD_LOADED, RECORD_SAVED, NULL_RECORD_ID, DatabaseResult
 from Enums import ColumnNamesEnum
 
+# This is the base class for all basic types (e.g. Person class)
+
 
 class PPTBaseItem:
     def __init__(self, table_name, data_saved_callback_func,

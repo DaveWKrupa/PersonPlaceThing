@@ -3,6 +3,9 @@ from contextlib import contextmanager
 from Configuration import Configuration
 from CustomExceptions import DatabaseConnectionError, ExceptionString
 
+# The ManagedConnection class is static
+# and is used as a context manager for database access
+
 
 class ManagedConnection:
     @staticmethod

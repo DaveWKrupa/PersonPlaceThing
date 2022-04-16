@@ -1,6 +1,9 @@
 from PPTBaseConnector import PPTBaseConnector
 from Enums import TableNamesEnum, ColumnNamesEnum
 
+# Events can be tied to places using the
+# EventPlaceConnector class
+
 
 class EventPlaceConnector(PPTBaseConnector):
     def __init__(self,
@@ -65,6 +68,9 @@ class EventPlaceConnector(PPTBaseConnector):
         self.event_id = None
         self.place_id = None
         self.event_place_id = None
+
+# Events can be tied to other events using the
+# EventEventConnector class
 
 
 class EventEventConnector(PPTBaseConnector):

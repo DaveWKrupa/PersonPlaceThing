@@ -1,5 +1,7 @@
 from PersonPlaceThingDB import PersonPlaceThingDB
 
+# This is the base class for all connection factory classes.
+
 
 class PPTBaseConnectorFactory:
     def __init__(self, table_name,

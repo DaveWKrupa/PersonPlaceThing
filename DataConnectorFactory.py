@@ -10,6 +10,8 @@ from PlaceConnectorClasses import PlacePlaceConnector
 from ThingConnectorClasses import ThingThingConnector, ThingEventConnector, \
     ThingPlaceConnector, ThingActionConnector
 
+# Factory classes for retrieving connector objects
+
 
 class ActionActionConnectorFactory(PPTBaseConnectorFactory):
     def __init__(self, data_saved_callback_func,

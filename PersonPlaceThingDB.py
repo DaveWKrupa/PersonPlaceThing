@@ -9,6 +9,18 @@ from Constants import DatabaseResult, TABLE_NAME_ERROR, \
     NO_PARAMETERS_UPDATE_ERROR, RECORD_SAVED, \
     NO_PARAMETERS_INSERT_ERROR, ERROR_SAVING_RECORD, RECORD_DELETED
 
+# The PersonPlaceThingDB class is the database access layer
+# for the PersonPlaceThing application.
+# All SQL scripting is dynamic based on the information
+# and data passed in. Because of this the code in this
+# class can be used by any relational database for any table
+# provided the following requirements.
+# Each table must have as its primary key a UUID field.
+# Each table must have a last_updated UTC Date-Time field.
+# There are methods available for a tags field of type text array.
+# The tags field will lower case all tags.
+# This class was built and tested using a Postgresql database
+
 
 class PersonPlaceThingDB:
 

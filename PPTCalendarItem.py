@@ -5,6 +5,9 @@ from Enums import ColumnNamesEnum
 from Constants import RECORD_NOT_FOUND, ERROR_LOADING_RECORD, \
     RECORD_LOADED, RECORD_SAVED, DatabaseResult
 
+# The PPTCalendarItem class extends the PPTBaseItem class
+# with DateTime fields and methods
+
 
 class PPTCalendarItem(PPTBaseItem):
     def __init__(self, table_name, data_saved_callback_func,

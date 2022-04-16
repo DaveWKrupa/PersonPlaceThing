@@ -1,6 +1,12 @@
 from Enums import TableNamesEnum
 from PPTCalendarItem import PPTCalendarItem
 
+# Actions are the things a Person has done, is doing,
+# or will do. Actions do not have to be associated with a person
+# as it may not be known who has or will take that Action
+# Actions are a PPTCalendarItem as they have
+# start and end date.
+
 
 class Action(PPTCalendarItem):
     def __init__(self, data_saved_callback_func,

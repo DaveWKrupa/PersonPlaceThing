@@ -1,6 +1,9 @@
 from PPTBaseConnector import PPTBaseConnector
 from Enums import TableNamesEnum, ColumnNamesEnum
 
+# A Place can be connected to another Place
+# using the PlacePlaceConnector
+
 
 class PlacePlaceConnector(PPTBaseConnector):
     def __init__(self,
