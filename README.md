@@ -19,6 +19,7 @@ For example RelationshipType = 'is a'
 Person = Betty
 Role = lawyer
 Person -> RelationshipType -> Role
+
 Betty is a lawyer
 
 Another example using both RelationshipType and Role
@@ -27,6 +28,7 @@ Thing2 = Dodge truck
 RelationshipType = 'is a component of'
 Role = 'directional control mechanism'
 Thing1 -> RelationshipType -> Thing2 -> Role
+
 The steering wheel is a component of the Dodge truck and is the directional control mechanism.
 
 Each of the basic class types can be connected to any other basic type.
@@ -41,14 +43,14 @@ the data_saved_callback_func and invalid_data_callback_func handles.
 These can be used by the caller to handle program events.
 The most basic implementation of these two functions are:
 
-def data_saved_callback_func(**kwargs):
-    for k, v in kwargs.items():
-        print(k, v)
-
-
-def invalid_data_callback_func(**kwargs):
-    for k, v in kwargs.items():
-        print(k, v)
+    def data_saved_callback_func(**kwargs):
+        for k, v in kwargs.items():
+            print(k, v)
+    
+    
+    def invalid_data_callback_func(**kwargs):
+        for k, v in kwargs.items():
+            print(k, v)
 
 An example keys in kwargs is passed into these are table_name, record_id and message.
 This code snippet shows how the function is called internally.
